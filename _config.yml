@@ -4,7 +4,7 @@
 
 # Site
 title: BigFang::Blog
-subtitle:
+subtitle: 虽然不大明白，但是好厉害啊
 description:
 author: bigfang
 email:
@@ -12,7 +12,7 @@ language:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://bigfang.bitbucket.org
+url: http://bigfang.net
 root: /
 permalink: :year/:month/:day/:title/
 tag_dir: tags
@@ -85,4 +85,6 @@ exclude_generator:
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
-  type:
+  type: github
+  repo: https://github.com/bigfang/hexo-blog.git
+  branch: gh-pages

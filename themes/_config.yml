@@ -18,7 +18,7 @@ widgets:
 ## modify links in `/layout/_widget/links.ejs`.
 
 #### RSS
-rss: ## RSS address.
+rss: /atom.xml
 
 #### Image
 imglogo:

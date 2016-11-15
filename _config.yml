@@ -79,12 +79,12 @@ disqus_shortname: bigfang
 # Extensions
 ## Plugins: https://github.com/hexojs/hexo/wiki/Plugins
 ## Themes: https://github.com/hexojs/hexo/wiki/Themes
-theme: pacman
+theme: pln
 exclude_generator:
 
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
   type: github
-  repo: https://github.com/bigfang/hexo-blog.git
+  repo: git@github.com:bigfang/bigfang.net.git
   branch: gh-pages

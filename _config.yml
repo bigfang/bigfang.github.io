@@ -71,3 +71,12 @@ deploy:
   type: git
   repo: git@github.com:bigfang/bigfang.net.git
   branch: gh-pages
+
+
+# 在归档页面显示所有文章
+# 需要上面安装的 hexo-generator-archive 插件支持
+archive_generator:
+    per_page: 20
+    yearly: true
+    monthly: false
+    daily: false

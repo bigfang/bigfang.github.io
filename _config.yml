@@ -69,8 +69,8 @@ theme: apollo
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:bigfang/bigfang.net.git
-  branch: gh-pages
+  repo: git@github.com:bigfang/bigfang.github.io.git
+  branch: master
 
 
 # 在归档页面显示所有文章

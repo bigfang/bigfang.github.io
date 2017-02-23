@@ -1,5 +1,5 @@
 ---
-title: 【译】在Elixir中创建riak_core应用（I）
+title: 【译】在Elixir中创建riak_core应用（1）
 date: 2017-02-21 23:02:34
 tags:
   - elixir

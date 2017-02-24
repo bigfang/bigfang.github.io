@@ -19,7 +19,7 @@ categories:
 ## 在Elixir中创建riak_core应用（2）
 
 首先，感谢所有读过我[之前一篇](https://medium.com/@GPad/create-a-riak-core-application-in-elixir-part-1-41354c1f26c3)文章的人，
-在这篇文章中，我们将继续使用前一篇文章中的代码，并加一些新的功能，你可以在[这里](https://github.com/gpad/no_slides)找到最终版本。
+在本篇文章中，我们将继续使用前文的代码，并增加一些新的功能，你可以在[这里](https://github.com/gpad/no_slides)找到最终版本。
 
 我们将添加的第一个功能是经典的Ping。
 
@@ -38,18 +38,17 @@ MIX_ENV=gpad_2 iex --name gpad_2@127.0.0.1 -S mix run
 MIX_ENV=gpad_3 iex --name gpad_3@127.0.0.1 -S mix run
 ```
 
-我们要做的是增加一个简单的可以在控制台中使用的`ping`功能，用来展示集群如何工作。
+我们要做的是增加一个简单的可以在控制台中使用的`ping`，用来展示集群如何工作。
 
 
 ### 节点，虚拟节点和组织他们的环
 
-riak_core的主要概念之一是与[环](http://docs.basho.com/riak/kv/2.2.0/learn/concepts/clusters/#the-ring)有关的
-虚拟节点的概念
+riak_core的主要概念之一是与[环](http://docs.basho.com/riak/kv/2.2.0/learn/concepts/clusters/#the-ring)相关的虚拟节点的概念
 
 ![riak-ring](imgs/riak-ring.png)
 
-这个想法很简单，你应该取得你在应用中管理的所有可能的值（这被成为键空间）并进行分区。
-例如riak_core使用经典的hash函数从二进制串中取得一个值，代码类似这样：
+环的想法很简单，你应该取得你在程序中管理的所有可能的值（这被成为键空间）并进行分区。
+例如riak_core使用经典的hash函数把二进制串计算出一个值，代码类似这样：
 
 ```bash
 iex(1)> key = "gpad"
@@ -63,11 +62,11 @@ iex(4)> v
 iex(5)>
 ```
 
-如你所见，我们将一个单词作为作为键并转为二进制串，然后使用`:crypt.sha`来hash这个它，然后，我们使用了
+如你所见，我们将一个单词作为作为键并转为二进制串，然后使用`:crypt.sha`对它进行hash运算，最后，我们使用了
 [二进制模式匹配](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#%3C%3C%3E%3E/1-binary-bitstring-matching)
-显示了这个值的，它的范围在0到2^160之间
+打印了它的值，值的范围在0到2^160之间
 
-riak_core默认把键空间（2^160）分割为64个分区（partition），每个分区负责管理（*认领*）环上的一段（segment）。
+riak_core默认把键空间（2^160）分割为64个分区（partition），每个分区负责管理（*处理*）环上的一段（segment）。
 这样的单个分区被成为虚拟节点（*vnode*），虚拟节点分布在真实的节点上，这样，当我们添加或删除节点时，可以做到尽可能少的数据传输。
 （更多的细节将在下一篇文章中介绍）
 
@@ -99,7 +98,7 @@ warning: undefined behaviour function is_empty/1
 warning: undefined behaviour function terminate/2
 ```
 
-应该在模块中实现下面这些函数，这些函数会在出发特定事件时被调用：
+应该在模块中实现下面这些函数，这些函数会在触发特定事件时被调用：
 
 * **init/1** -- 当虚拟节点创建时被调用，它和[GenServer](https://hexdocs.pm/elixir/GenServer.html#c:init/1)
 的*init*非常相似。它接收一个数组作为参数，数组里是vnode负责管理的分区的值。该函数返回进程的状态（state）。在其他的回调函数中，
@@ -108,7 +107,7 @@ warning: undefined behaviour function terminate/2
 * **handle_exit/3** -- 当vnode[关联](http://erlang.org/doc/reference_manual/processes.html#id87759)的进程死亡时，
 该函数被调用。它接收死亡进程的pid，reason和state。你可以返回`{:noreply, state}`来继续（运行程序）。
 * **delete/1** -- 当需要删除与vnode关联的数据时调用，和其他函数一样，它接收state作为参数并返回`{:ok, new_state}`。
-* **handle_command/3** -- 当vnode执行命令时被调用，这个函数被用来实现我们自己的命令。
+* **handle_command/3** -- 当vnode执行命令（command）时被调用，这个函数被用来实现我们自己的命令。
 * **handle_coverage/4** -- 当我们创建[coverage命令](https://marianoguerra.github.io/little-riak-core-book/listing-keys-from-a-bucket.html)时调用。我们将在下一篇文章中处理这种类型的命令。
 * 剩下的函数都和[handoff过程](https://github.com/basho/riak_core/wiki/Handoffs)（handoffs procedure）有关，我们将在下一篇中讨论
 
@@ -178,7 +177,7 @@ defmodule NoSlides.VNode do
 end
 ```
 
-函数`handle_command/3`里才包含了真正的工作，使用模式匹配（就像GenServer一样），我们像这样来实现handle_command
+真正的工作在函数`handle_command/3`里实现，使用模式匹配（和GenServer类似），我们像这样来实现handle_command
 
 ```elixir
 def handle_command({:ping, v}, _sender, state) do
@@ -187,7 +186,7 @@ end
 ```
 
 现在，我们已经实现了ping命令。那么如何从控制台执行？我们需要引入一个我喜欢称之为**服务**的概念。
-服务是一个模块，它包装了一些操作，可以与riak_core暴露出来的命令交互。服务应该在riak_core中注册，
+服务是一个模块，它包装了一些操作，可以与riak_core对外开放的命令交互。服务应该在riak_core中注册，
 这样riak_core才会知道是什么节点暴露了服务。代码如下：
 
 ```elixir
@@ -205,16 +204,16 @@ defmodule NoSlides.Service do
 end
 ```
 
-在第四行，我们计算了要存储的值的id。这个id是*键空间*上的一个值。利用这个**idx**，我们可以用**get_primary_apl**（第5行）向riak_core请求一个**首选项列表**（preference list）。首选项列表是一个集合，它包含了哪些节点处理哪些分区的信息。当调用*get_primary_apl*时，
+在第4行，我们算出了要存储的值的id。这个id是*键空间*上的一个值。利用这个**idx**，我们可以用**get_primary_apl**（第5行）向riak_core请求一个**首选项列表**（preference list）。首选项列表是一个集合，它包含了哪些节点处理哪些分区的信息。当调用*get_primary_apl*时，
 我们需要列表的长度1（第二个参数）和一个实现了**NoSlides.Service**的节点（第三个参数）。在这个例子中，我们只请求了一个元素，
-因为我们只希望在一个节点上执行命令，下一篇文章中，我们会讨论*冗余*（redundancy）。从首选项列表中，我们提取**index_node**，
-用于标识执行命令的真实的或是虚拟的节点。这个节点对具有**idx**标识的数据拥有所有权。
+因为我们只希望在一个节点上执行命令，下一篇文章中，我们会讨论*冗余*（redundancy）。从首选项列表中，我们获取了**index_node**，
+它用于标识执行命令的真实的或是虚拟的节点。这个节点对具有**idx**标识的数据拥有所有权。
 
 在第9行，我们用**index_node**作为参数调用函数`:riak_core_vnode_master.sync_command`。该函数是同步的，
 也就是说直到vnode模块完成工作后它才会返回。如果查看`:riak_core_vnode_master`的代码，你会发现`:riak_core_vnode_master.command`，
 这个函数采用的则是异步的方式。
 
-你可能还发现了`sync_spawn_command`，它类似于`sync_command`，检查代码的话，你会发现这样的注释
+你可能还发现了`sync_spawn_command`，它类似于`sync_command`，查看源码的话，你会发现这样的注释
 
 ```erlang
 %% Send a synchronous spawned command to an individual Index/Node
@@ -225,14 +224,14 @@ end
 sync_spawn_command({Index,Node}, Msg, VMaster) ->
 ```
 
-事实上不是这样的，这些可能是老的注释或者是老的实现，最后要说的是，riak_core约定，
+事实上并不是这样的，这些可能是老的注释或者是老的实现，最后要说的是，riak_core约定，
 vnode的名称带有`_master`后缀（**NoSlides.VNode_master**）
 
 现在，我们已经实现了**Service**和**VNode**，还需要把所有的这些集中在一起，为此，我们要从头开始...
 
 ### 启动riak_core程序
 在OTP应用中，我们需要从一个实现了[Application](https://hexdocs.pm/elixir/Application.html)行为的模块开始。
-如果你用mix创建了一个空的工程，那么你可能已经有了一个名为`NoSlides`的模块并引入了`use Application`，扔掉它并替换成这样：
+如果你用mix创建了一个空的工程，那么你可能已经有了一个引入了`use Application`的名为`NoSlides`的模块，扔掉它并替换成这样：
 ```elixir
 defmodule NoSlides do
   use Application
@@ -255,8 +254,7 @@ end
 第6行，我们启动了一个supervisor，稍后再来实现它。如果一切顺利，我们在第8行注册实现了vnode的模块，
 在第9行注册实现了服务的模块。
 
-supervisor应该在`lib/no_slides/supervisor.ex`中实现，内容像是这样：
-
+supervisor的实现应该放在`lib/no_slides/supervisor.ex`中，内容像是这样：
 ```elixir
 defmodule NoSlides.Supervisor do
   use Supervisor
@@ -276,8 +274,8 @@ defmodule NoSlides.Supervisor do
 end
 ```
 
-这是一个经典的supervisor，但我们要注意一些细节，supervisor的id应该以`_sup`为结束（第6行），
-而worker的id应该使用`_master_worker`后缀（第11行）
+这是一个经典的supervisor，但要注意一些细节，supervisor的id应当以`_sup`为结束（第6行），
+而工作者（worker）的id应当使用`_master_worker`后缀（第11行）
 
 之后，我们可以使用下面的命令启动节点：
 
@@ -295,7 +293,7 @@ iex(gpad_1@127.0.0.1)2> NoSlides.Service.ping(42)
 iex(gpad_1@127.0.0.1)3>
 ```
 
-现在，我们可以加入更多的节点来运行*分布式的ping*，第一步，我们需要在不同的控制台启动更多的节点：
+现在，我们可以加入更多的节点来运行*分布式的ping*，第一步，我们要在不同的控制台启动更多的节点：
 ```bash
 # this is node 1
 MIX_ENV=gpad_1 iex --name gpad_1@127.0.0.1 -S mix run
@@ -312,12 +310,12 @@ MIX_ENV=gpad_3 iex --name gpad_3@127.0.0.1 -S mix run
 iex(gpad_2@127.0.0.1)1> :riak_core.join('gpad_1@127.0.0.1')
 ```
 
-同样的，在节点3执行相同的操作
+同样，在节点3执行相同的操作
 ```bash
 iex(gpad_3@127.0.0.1)1> :riak_core.join('gpad_1@127.0.0.1')
 ```
 
-如果检查节点1的控制台，那么你会看到这样的日志：
+如果查看节点1的控制台，那么会看到这样的日志：
 ```bash
 12:21:53.168 [info] 'gpad_2@127.0.0.1' joined cluster with status 'valid'
 12:22:39.155 [info] 'gpad_3@127.0.0.1' joined cluster with status 'joining'
@@ -325,14 +323,12 @@ iex(gpad_3@127.0.0.1)1> :riak_core.join('gpad_1@127.0.0.1')
 ```
 
 现在，你可以使用下面的命令来请求riak_core打印**环**的状态：
-
 ```bash
 {:ok, ring} = :riak_core_ring_manager.get_my_ring
 :riak_core_ring.pretty_print(ring, [:legend])
 ```
 
 你会看到这样的输出：
-
 ```bash
 ============================= Nodes =============================
 Node a: 22 ( 34.4%) gpad_1@127.0.0.1
@@ -342,12 +338,11 @@ Node c: 21 ( 32.8%) gpad_3@127.0.0.1
 abcc|abcc|abcc|abcc|abcc|abcc|abcc|abcc|abcc|abcc|abca|abba|abba|abba|abba|abba|
 ```
 
-正如你所看到的，环被分成64个分区，节点1拥有22个VNode，剩下两个节点各拥有21个，你同样可以在**observer**中看到：
+正如你所看到的，环被分成了64个分区，节点1拥有22个VNode，剩下两个节点各拥有21个，你同样可以在**observer**中看到：
 
 ![observer](imgs/observer.png)
 
-现在我们可以在VNode的实现中加入日志，这样我们就可以看到是哪个节点响应了ping（记得在模块顶部加入`require Logger`）
-
+现在我们可以在VNode的实现中加入日志，这样就可以看到是哪个节点响应了ping（记得在模块顶部加入`require Logger`）
 ```elixir
 def handle_command({:ping, v}, _sender, state) do
   Logger.debug("Receive ping with value: #{v}")
@@ -366,16 +361,15 @@ iex(gpad_1@127.0.0.1)1> NoSlides.Service.ping
 12:43:00.822 [debug] Receive ping with value: 1
 ```
 
-我们已经有了一个非常简单的分布式ping，如果改变传递给ping的值，能够看到响应ping的不同的节点。
+我们已经有了一个非常简单的分布式的ping，如果改变传递给ping的值，能够看到响应ping的不同的节点。
 例如，如果使用42，则节点3会作出响应。
 
-现在，我们有了ping，这样我们就可以创建一个基于内存的键值存储。
+现在，我们有了ping，这样我们就可以轻松的创建一个基于内存的键值存储。
 
 
 ### 内存中的KV
 
 现在我们已经了解如何连接服务和vnode，我们可以在服务模块上暴露`get`和`put`函数，来轻松创建一个内存键值存储，
-
 ```elixir
 defmodule NoSlides.Service do
 
@@ -402,7 +396,7 @@ defmodule NoSlides.Service do
 end
 ```
 
-同样，在VNode中也要添加`get`和`put`的实现：
+同样，在VNode中也要加上`get`和`put`的实现：
 ```elixir
 defmodule NoSlides.VNode do
 
@@ -443,7 +437,7 @@ iex(gpad_2@127.0.0.1)1>
 19:31:39.242 [debug] [get]: k: :k
 ```
 
-同样，在节点3也可以取值
+同样，在节点3上也可以取值
 ```bash
 iex(gpad_3@127.0.0.1)1> NoSlides.Service.get(:k)
 42
@@ -465,10 +459,10 @@ iex(gpad_1@127.0.0.1)12> NoSlides.Service.get(%{a: 1, b: 2})
 "gpad"
 ```
 
-这是一个简单的内存键值存储的开始，还有一个开放的问题：
+以一个简单的内存键值存储的作为开始，还有一些问题：
 * 如果一个节点使用`:riak_core.leave`离开集群，会发生什么？
 * 如果某个节点崩溃，会发生什么？
-* 我们如何获取所有键的列表？
+* 我们如何获取所有的键？
 
 我会在下一篇中尝试回答这些问题，如果你有任何问题或发现了什么错误，请不要犹豫，在下面留言吧。
 

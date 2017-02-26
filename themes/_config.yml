@@ -8,9 +8,10 @@ menu:
 favicon: /favicon.ico
 logo: /favicon.ico
 
-duoshuo: bigfang
+disqus: bigfang
+-duoshuo: bigfang
 
 ga: UA-37180058-1
 
 # Copyright Infomation
-startyear: 2016
+startyear: 2015

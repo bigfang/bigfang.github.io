@@ -1,5 +1,5 @@
 ---
-title: Elixir中的移除模块
+title: Elixir中被移除的模块
 date: 2017-03-08 20:29:07
 tags:
   - elixir

@@ -15,7 +15,7 @@ categories:
 
 然后又试了一把BBR，生活质量同样也达到了1080p。
 
-kcptun安装配置并不复杂，不过调参挺麻烦的；BBR需要内核版本>=4.9，用`uname -r`查一下，配置也还是蛮简单的：
+kcptun安装配置并不复杂，不过调参挺麻烦的；BBR需要内核版本>=4.9，可以用`uname -r`查看，配置也还是蛮简单的：
 
 ```shell
 sudo modprobe tcp_bbr

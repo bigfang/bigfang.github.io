@@ -4,9 +4,16 @@
     <title>╮(╯3╰)╭</title>
     <link>http://bigfang.net</link>
     <description>虽然不太明白，但是好厉害啊</description>
-    <pubDate>Fri, 18 Jan 2019 10:42:31 CST</pubDate>
-    <lastBuildDate>Fri, 18 Jan 2019 10:42:31 CST</lastBuildDate>
+    <pubDate>Fri, 18 Jan 2019 11:52:48 CST</pubDate>
+    <lastBuildDate>Fri, 18 Jan 2019 11:52:48 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
+    <item>
+      <title>换到了org-page</title>
+      <link>http://bigfang.net/blog/2019-01-18/org-page</link>
+      <description><![CDATA[move to org-page]]></description>
+      <pubDate>2019-01-18</pubDate>
+      <guid>http://bigfang.net/blog/2019-01-18/org-page</guid>
+    </item>
   </channel>
 </rss>

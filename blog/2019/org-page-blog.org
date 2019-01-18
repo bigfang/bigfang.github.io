@@ -1,0 +1,13 @@
+#+TITLE:       换到了org-page
+#+AUTHOR:      bigfang
+#+EMAIL:       bitair@gmail.com
+#+DATE:        <2019-01-18 Fri 11:23>
+#+URI:         /blog/%y-%m-%d/org-page
+#+KEYWORDS:    org-mode
+#+TAGS:        :Emacs:Org Mode:
+#+LANGUAGE:    zh
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+DESCRIPTION: move to org-page
+
+
+换到了[[https://github.com/kelvinh/org-page][org-page]]

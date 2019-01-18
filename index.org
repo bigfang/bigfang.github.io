@@ -1,0 +1,12 @@
+#+TITLE:       首页
+#+AUTHOR:      bigfang
+#+EMAIL:       bitair@gmail.com
+#+DATE:        <2019-01-18 Fri 10:05>
+#+URI:         /
+#+KEYWORDS:    Elixir, Emacs, Archlinux, Org-page, Programming, Blog, 博客, 编程,
+#+LANGUAGE:    zh
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+DESCRIPTION: bigfang的个人首页
+
+
+施工中...

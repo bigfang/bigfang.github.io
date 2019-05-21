@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>透过论坛看股市（2.5）:透视表与热力图 - ╮(╯3╰)╭</title>
+    <title>用pyenv重新整了个开发环境 - ╮(╯3╰)╭</title>
     <meta charset="utf-8" />
     <meta name="author" content="bigfang" />
-    <meta name="description" content="analyze jisilu" />
-    <meta name="keywords" content="pandas, matplotlib, seaborn, python, 可视化, 股市" />
     <link rel="stylesheet" href="/media/css/main.css" type="text/css">
     <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
@@ -30,65 +28,77 @@
 
 <div>
 <div class="post">
-<h1>透过论坛看股市（2.5）:透视表与热力图</h1>
+<h1>用pyenv重新整了个开发环境</h1>
 <p>
-连着几天每天都写blog写烦了，词穷，还耽误时间。直接放整理的笔记吧，再说一遍
-<code>ipython notebook</code> 真是好东西啊！
+好久没写博客了，因为一直不干正事。最近受老婆胁迫帮她做事，顺便自己也学习学习，值得记录一下，备忘。
 </p>
 
 <p>
-<a href="http://nbviewer.jupyter.org/gist/bigfang/e96181161e9b698a6422cc4cd81970b7">jupyter nbviewer</a>
+<a href="https://github.com/yyuu/pyenv">pyenv</a>，一个模仿<a href="https://github.com/rbenv/rbenv">rbenv</a>而产生的工具，可以方便的管理各种python版本。命令基本和<a href="https://github.com/rbenv/rbenv">rbenv</a>差不多。用<a href="https://github.com/yyuu/pyenv">pyenv</a>和它的<a href="https://github.com/yyuu/pyenv-virtualenv">virtualenv插件</a>，来替代<a href="https://virtualenv.pypa.io/en/stable/">virtualenv</a>是个不错的选择。
 </p>
-
-<script src="https://gist.github.com/bigfang/e96181161e9b698a6422cc4cd81970b7.js"></script>
 
 <p>
-忽然意识到这样用 <code>script</code> 标签来加载内容其实很不利于SEO，但是我懒，算了。
+安装=pyenv=时报错，报错记录已经遗失，好象是系统缺少一些库文件之类的，运行=xcode-select &#x2013;install=解决。
 </p>
 
-<div id="outline-container-org6269e2e" class="outline-2">
-<h2 id="作为民科的研究计划"><a id="org6269e2e"></a>作为民科的研究计划</h2>
-<div class="outline-text-2" id="text-作为民科的研究计划">
 <p>
-这里连着两篇博文，虽然生成了图表让人很有成就感，但是一直和股票无关，所以我下面打
-算折腾下和股价相关的东西了，其实已经有了一个想法：/论坛发帖数量和股价之间的关系/。
-我是这样想的，在牛市或者熊市正在进行的时候，人们可能会有两种表现：
+=pyenv=的配置方法文档上都有，没什么好说的，完成之后装<a href="http://pandas.pydata.org/">pandas</a>，<a href="http://matplotlib.org/">matplotlib</a>也很顺利，然后打开我的新宠=ipython notebook=输入
 </p>
-<ol class="org-ol">
-<li>发帖会大幅增加，因为难以抑制激动or羡慕嫉妒或者沮丧or幸灾乐祸的心情而导致强烈
-的倾诉欲</li>
-<li>回帖会大幅增加，因为看到楼主牛逼或者傻逼的样子而不由自主的想要表达敬仰or不屑
-或者嘲笑or同病相怜</li>
-</ol>
 
-<p>
-那么实际上是哪一种呢，统计一下发帖回帖数量和股价对比一下看出来了，而且这个实现起
-来似乎也不难的样子，下回就开始试试这个吧。
-</p>
-</div>
+<div class="org-src-container">
+<pre class="src src-python">import matplotlib.pyplot as plt
+</pre>
 </div>
 
-<div id="outline-container-org40316f1" class="outline-2">
-<h2 id="数学限制了我的想象力"><a id="org40316f1"></a>数学限制了我的想象力</h2>
-<div class="outline-text-2" id="text-数学限制了我的想象力">
 <p>
-写到这里，我已经敏锐的发现了一个严重的问题，那就是对于这些数据，目前我自己能想到
-的玩法也就那么几种，复杂度的上限就是我能写出的最复杂的SQL而已。换句话说，就算是
-玩法的复杂度达到了我能力的极限，分析出来的结果对于一个思维能力正常的人来说依然是
-直观的，容易理解的。他会这样对我说："哦，你用工具节省了统计的时间。“而不是像这样：
-"咦，这个结论你是怎么得到的？“原因也显而易见：*数学限制了我的想象力*，因此趁着寒
-假要买书来看看了。
+咦，报错了
 </p>
+
+<pre class="example">
+UserWarning: Python is not installed as a framework. The MacOSX backend may not
+work correctly if Python is not installed as a framework. Please see the
+Python documentation for more information on installing Python as a framework on Mac OS X
+</pre>
+
+<p>
+原来=pyenv=安装的python并不是作为=Mac OS X=的framework安装的。=matplotlib=文档上给出了<a href="http://matplotlib.org/faq/virtualenv_faq.html#working-with-matplotlib-in-virtual-environments">解决方案</a>，虽然这个方案是针对=virtualenv=的，不过=pyenv=应该也差不多，于是选择了看起来比较顺眼的在=zshrc=中添加函数的方法，修改函数如下
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">function frameworkpython {
+    if [[ ! -z "$PYENV_VIRTUAL_ENV" ]]; then
+        PYTHONHOME=$PYENV_VIRTUAL_ENV `which python` "$@"
+    else
+        /usr/local/bin/python "$@"
+    fi
+}
+</pre>
 </div>
+
+<p>
+其实也就是把环境变量=VIRTUAL<sub>ENV</sub>=换成了=PYENV<sub>VIRTUAL</sub><sub>ENV</sub>=而已。然而不知道什么原因，并没有生效（当然运行=exec $SHELL=我是没有忘记的）
+</p>
+
+<p>
+只好继续google，发现=pyenv=可以把python作为framework来安装:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">env PYTHON_CONFIGURE_OPTS="--enable-framework CC=clang" pyenv install 3.5.2
+</pre>
 </div>
+
+<p>
+用这个命令重装python之后，一切都OK了。
+</p>
 
 </div>
 </div>
     <div>
       <div class="post-meta">
-        <span title="post date" class="post-info">2018-01-31</span>
+        <span title="post date" class="post-info">2016-11-16</span>
         <span title="last modification date" class="post-info">2019-01-18</span>
-        <span title="tags" class="post-info"><a href="/tags/pandas/">pandas</a>, <a href="/tags/matplotlib/">matplotlib</a>, <a href="/tags/seaborn/">seaborn</a>, <a href="/tags/python/">python</a>, <a href="/tags/集思录/">集思录</a></span>
+        <span title="tags" class="post-info">N/A</span>
         <span title="author" class="post-info">bigfang</span>
       </div>
       <section>
@@ -96,8 +106,8 @@
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
-          var disqus_identifier = "/blog/2018-01-31/analyze-jisilu-2.5";
-          var disqus_url = "http://bigfang.net/blog/2018-01-31/analyze-jisilu-2.5";
+          var disqus_identifier = "/blog/2016-11-16/用pyenv重新整了个开发环境";
+          var disqus_url = "http://bigfang.net/blog/2016-11-16/用pyenv重新整了个开发环境";
           var disqus_shortname = 'bigfang';
           /* * * DON'T EDIT BELOW THIS LINE * * */
           (function() {

@@ -4,8 +4,8 @@
     <title>╮(╯3╰)╭</title>
     <link>http://bigfang.net</link>
     <description>虽然不太明白，但是好厉害啊</description>
-    <pubDate>Fri, 18 Jan 2019 13:31:22 CST</pubDate>
-    <lastBuildDate>Fri, 18 Jan 2019 13:31:22 CST</lastBuildDate>
+    <pubDate>Tue, 21 May 2019 09:48:16 CST</pubDate>
+    <lastBuildDate>Tue, 21 May 2019 09:48:16 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
     <item>
@@ -42,6 +42,178 @@
       <description><![CDATA[move to org-page]]></description>
       <pubDate>2019-01-18</pubDate>
       <guid>http://bigfang.net/blog/2019-01-18/org-page</guid>
+    </item>
+    <item>
+      <title>你要战，我便战！</title>
+      <link>http://bigfang.net/blog/2011-06-28/你要战，我便战！</link>
+      <description><![CDATA[<div>
+<div class="post">
+<h1>你要战，我便战！</h1>
+<p>
+MT自带的TypePad
+AntiSpam和SpamLookup看来功能不够强大，偶尔还是有漏网之鱼，终于无法忍受每天手工删除spam了。
+昨晚上折腾了一个MT-Akismet装上去，有点小失望啊，配置超简单，会不会功能很弱啊。
+</p>
+
+<p>
+忽然很期待各种垃圾评论，很想试试效果怎么样。
+</p>
+
+<p>
+顺道又折腾了一下Google Analytics，其实早就想搞了就是懒得弄。
+MT这种用模板来配置网页的方式真不错，改起来也省事。
+只要在js的模板里加入Google Analytics的代码就可以了。
+另外再赞一下GoogleAnalytics这个插件，后台的页面漂亮了许多。
+</p>
+
+<p>
+最后又装了CKEdit想改善一下编辑器，不过不知何故，没有任何效果，坑爹哪。
+</p>
+
+<p>
+发现GoogleAnalytics和CKEdit都是日本人写的，玩Emacs的时候也经常碰到出自日本人之手的插件。
+看起来他们很喜欢搞这些冷门的东西呢。
+</p>
+
+</div>
+</div>]]></description>
+      <pubDate>2019-01-18</pubDate>
+      <guid>http://bigfang.net/blog/2011-06-28/你要战，我便战！</guid>
+    </item>
+    <item>
+      <title>头像哪儿去了</title>
+      <link>http://bigfang.net/blog/2011-05-14/头像哪儿去了</link>
+      <description><![CDATA[<div>
+<div class="post">
+<h1>头像哪儿去了</h1>
+<p>
+在安装blog的时候，MovableType就报告没有发现Image::Magick模块，作为一个不关心warning的家伙，也就得过且过了。
+后来发现用户头像始终是一个暗淡的小脑袋，上传头像也找不到地方，这实在是让人不爽，终于在昨晚上腾出手来把这问题给解决了。
+</p>
+
+<p>
+最直接的方法就是把这个缺掉的模块装上好了，在cpan上折腾了好久都没成功，才注意到Image::Magick是依赖ImageMagick的，
+这台主机本身没有安装，只得自己编译了。
+编译过程中，一度发现空间占用达到了252M-_-|||，安装清理完了之后依然有50多M，就算再干掉25M文档，还是很大呀，果然处理图像的都是大家伙么。
+都这样搞，我这小小的300M空间怎么吃得消。
+</p>
+
+<p>
+网上搜了艘，发现可以配置mt-config.cgi文件里的ImageDriver来改变MT使用的图像工具，
+ImageMagick只不过是这个配置的缺省值而已，还有NetPBM，GD和Imager（MT5.1）可供选择。
+原来根本不用这么复杂，直接改配置就好╯﹏╰，加入一行ImageDriver
+GD，头像就可以上传并显示了（当然，主机上得安装了那个GD模块先）。
+果然官方文档才是王道。
+</p>
+
+<p>
+mt-config.cgi是MT的配置文件，会存放数据库的用户名密码啥的，应该很重要才是，可是网上好多文章说要把权限设成755甚至777，很不解。
+我是只给了400，目前也没出什么问题，这种文件还是权限小点比较安心。
+</p>
+
+<p>
+忙了一个晚上，终于还是搞好了，挑了一张萌图做头像，blog主页会不会显示头像了呢，满怀憧憬的刷新，咦，没变呀。
+是不是没有重新发布的原因呢？publish，刷新，太坑爹了，依然什么变化都没有，掀桌！睡觉去&#x2026;&#x2026;
+</p>
+
+<p>
+这就是那两个小萌物<br />
+<img src="file:///assets/media/img/little-white-two.jpg" alt="little-white-two.jpg" />
+</p>
+
+</div>
+</div>]]></description>
+      <pubDate>2019-01-18</pubDate>
+      <guid>http://bigfang.net/blog/2011-05-14/头像哪儿去了</guid>
+    </item>
+    <item>
+      <title>圆满</title>
+      <link>http://bigfang.net/blog/2012-08-17/圆满</link>
+      <description><![CDATA[<div>
+<div class="post">
+<h1>圆满</h1>
+<p>
+周日，占星家宣布，本周是幸运之周，所有2货产量加倍。
+</p>
+
+<p>
+今日总结：本周及其诡异，2过，被2过，总之2比2平了，有种人生圆满了的感觉。<br />
+最近不是很忙，不过要做的事情还是不少的，学习的兴致又上来了，可以看看书了。<br />
+3年断断续续的纸上谈兵的看lisp，最近终于找到点感觉，似乎有点懵懂了，可喜可贺。列下要看的书吧。
+</p>
+
+<ul class="org-ul">
+<li>SICP再看一遍前三章。</li>
+<li>Clojure的语法学起来，顺便找个hello
+world练练手。话说clojure还真是不错。</li>
+<li>实用Common Lisp编程看起来。</li>
+<li>有空还是要复习下ruby元编程，感觉对我写python也是大有帮助的。</li>
+</ul>
+
+</div>
+</div>]]></description>
+      <pubDate>2019-01-18</pubDate>
+      <guid>http://bigfang.net/blog/2012-08-17/圆满</guid>
+    </item>
+    <item>
+      <title>又动杀心了</title>
+      <link>http://bigfang.net/blog/2012-06-13/又动杀心了</link>
+      <description><![CDATA[<div>
+<div class="post">
+<h1>又动杀心了</h1>
+<p>
+这几天又看到一个静态blog生成器ruhoh，Mustache当模版，Markdown写文章，git做管理，还宣称以后会支持部署在github和heroku上（不过目前一样可以部署，大概就稍微麻烦一点）
+更主要的是它的网站比那啥octppress好看的多得多！不能不让人动心啊。<br />
+现在是alpha版，win下面折腾还有点问题，还是很期待正式版的。
+</p>
+
+<p>
+看来现在这个blog又命不久矣╮(╯3╰)╭。
+</p>
+
+</div>
+</div>]]></description>
+      <pubDate>2019-01-18</pubDate>
+      <guid>http://bigfang.net/blog/2012-06-13/又动杀心了</guid>
+    </item>
+    <item>
+      <title>頑張ります</title>
+      <link>http://bigfang.net/blog/2011-11-29/頑張ります</link>
+      <description><![CDATA[<div>
+<div class="post">
+<h1>頑張ります</h1>
+<p>
+重装系统是会上瘾的吧，每年发作一次。
+</p>
+
+<p>
+上回装了win7和arch的双系统，结果也没用几次arch，白白闲了这么多硬盘空间。
+这回于是就学聪明了，果断的只装了一个系统--&#x2013;&#x2014;Arch。
+</p>
+
+<p>
+自打出了webqq，拿linux做桌面就没什么障碍了，新出的Q+也很给力。
+arch的安装很快，这次果断的选择了xfce4，而没有脑残的花时间折腾窗口管理器，而且有之前留下来的配置，很迅速的搞定一切，
+兴致勃勃的打开捕鱼乐园，才玩了一小会，哔ーー的一下就关机了。
+</p>
+
+<p>
+开始以为是flash的毛病，后来用rvm编译ruby的时候又发生了一次，估计是显卡驱动的问题了，
+悲催的ATI。这看视频估计也是要悲剧的。明明以前没有这个问题呐T<sub>T</sub>
+</p>
+
+<p>
+很明智的没有搞什么代码高亮插件，不然这个blog非得变成没有技术含量的技术博不可。
+每天上班下班都搞这些也很乏味。说要学日语，到现在50音还没记住，真是太废了。
+买来的《新编日语》连翻都没翻。看来我至少拥有了三大美德之首(╯3╰)。
+虽说觉得日语很萌，可从我嘴巴里出来的，就是猥琐大叔的调调，
+这难道就是理想与现实的差距吗╮(╯_╰)╭。不管多么难听，还是要頑張的，哈哈。
+</p>
+
+</div>
+</div>]]></description>
+      <pubDate>2019-01-18</pubDate>
+      <guid>http://bigfang.net/blog/2011-11-29/頑張ります</guid>
     </item>
   </channel>
 </rss>

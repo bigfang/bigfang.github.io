@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>IEx的一些Tips - ╮(╯3╰)╭</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="bigfang" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
+  </head>
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="/">╮(╯3╰)╭</a></h1>
+        <p>虽然不太明白，但是好厉害啊</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/bigfang">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="bigfang.net">
+        </form>
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>IEx的一些Tips</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#iex里的帮助">1. IEx里的帮助</a></li>
+<li><a href="#退出iex的快捷键">2. 退出IEx的快捷键</a></li>
+<li><a href="#使用iex.pry进行调试">3. 使用IEx.pry进行调试</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgf7d92fe" class="outline-2">
+<h2 id="iex里的帮助"><a id="orgf7d92fe"></a><span class="section-number-2">1</span> IEx里的帮助</h2>
+<div class="outline-text-2" id="text-iex里的帮助">
+<p>
+敲个=h=就出来啦，还是彩色的，其实启动iex的时候稍微注意下文字就能发现&#x2026;
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">(master)⚡ % iex
+Erlang/OTP 19 [erts-8.2.2] [source] [64-bit] [smp:4:4] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
+
+Interactive Elixir (1.4.2) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)&gt;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfe439f4" class="outline-2">
+<h2 id="退出iex的快捷键"><a id="orgfe439f4"></a><span class="section-number-2">2</span> 退出IEx的快捷键</h2>
+<div class="outline-text-2" id="text-退出iex的快捷键">
+<p>
+因为=iex=继承自erlang的=erl=，所以退出的方法也颇为诡异，=Ctrl-D=都无法直接退出的
+</p>
+
+<ul class="org-ul">
+<li>连续按两次 =Ctrl-C=。最暴力，但估计也是用的最多的方法了</li>
+<li>=Ctrl-C=之后根据提示，选择=a=。看起来比上面的方式文明不少</li>
+<li><code>Ctrl-G=之后，然后输入=q=。=erl=中，=Ctrl-G=之后将进入=作业控制模式（JCL）=，
+  进入这种模式后，可以键入=h=或者</code>?=来显示帮助。</li>
+<li><code>Ctrl-\=。这种方式等同于执行</code>:erlang:halt=，看起来最接近=Ctrl-D=，按键次数也是最少，
+还是<a href="http://erlang.org/faq/getting_started.html#idp31948112">erlang</a>"官方推荐"快捷键</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org76eee63" class="outline-2">
+<h2 id="使用iex.pry进行调试"><a id="org76eee63"></a><span class="section-number-2">3</span> 使用IEx.pry进行调试</h2>
+<div class="outline-text-2" id="text-使用iex.pry进行调试">
+<p>
+其实函数式语言，一般都不需要太复杂的调试（吧），因为验证了输入输出就完事了（呀）。
+不过作为一个长得像=ruby=的语言，Elixir的=IEx=提供了一个简化版的<a href="http://pryrepl.org/">pry</a>。
+</p>
+
+<p>
+例如下面的代码，注意第1行，第6行：
+</p>
+
+<pre class="example">
+require IEx
+
+defmodule Adder do
+  def add(a, b) do
+    c = a + b
+    IEx.pry
+  end
+end
+</pre>
+
+<p>
+当在=iex=里调用=Adder.add/2=时，会出现下面这样的提示
+</p>
+
+<pre class="example">
+iex(1)&gt; Adder.add(1, 2)
+Request to pry #PID&lt;0.85.0&gt; at ooxx.exs:6
+
+      def add(a, b) do
+        c = a + b
+        IEx.pry
+      end
+    end
+
+Allow? [Yn]
+</pre>
+
+<p>
+输入=y=，=Adder.add/2=所在的进程便会被"撬开"，iex的shell将会被重置，
+断点之前的变量和词法作用域都可以被访问到，可以在iex里进行一些计算，就像下面这样
+</p>
+
+<pre class="example">
+pry(1)&gt; Enum.map([a, b, c], &amp;IO.inspect(&amp;1))
+1
+2
+3
+[1, 2, 3]
+</pre>
+
+<p>
+=IEx.pry/1=在调用者进程中运行的，在它执行期间会阻塞住调用者，可以使用=respawn=释放调用者，
+这个操作会启动一个新的=IEx=进程：
+</p>
+
+<pre class="example">
+pry(2)&gt; respawn()
+
+Interactive Elixir (1.4.2) - press Ctrl+C to exit (type h() ENTER for help)
+:ok
+iex(1)&gt; self()
+#PID&lt;0.89.0&gt;
+</pre>
+
+<p>
+可以看到，之前的pid是=#PID&lt;0.85.0&gt;=，现在pid变成了=#PID&lt;0.89.0&gt;=。
+</p>
+</div>
+</div>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2017-03-01</span>
+        <span title="last modification date" class="post-info">2019-01-18</span>
+        <span title="tags" class="post-info">N/A</span>
+        <span title="author" class="post-info">bigfang</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2017-03-01/iex的一些tips";
+          var disqus_url = "http://bigfang.net/blog/2017-03-01/iex的一些tips";
+          var disqus_shortname = 'bigfang';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-37180058-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:bitair &lt;at&gt; gmail &lt;dot&gt; com">bigfang</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>透过论坛看股市（2.5）:透视表与热力图 - ╮(╯3╰)╭</title>
+    <title>过上了在线看1080p的幸福生活 - ╮(╯3╰)╭</title>
     <meta charset="utf-8" />
     <meta name="author" content="bigfang" />
-    <meta name="description" content="analyze jisilu" />
-    <meta name="keywords" content="pandas, matplotlib, seaborn, python, 可视化, 股市" />
     <link rel="stylesheet" href="/media/css/main.css" type="text/css">
     <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
   </head>
@@ -30,55 +28,72 @@
 
 <div>
 <div class="post">
-<h1>透过论坛看股市（2.5）:透视表与热力图</h1>
+<h1>过上了在线看1080p的幸福生活</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#kcptun和bbr">1. kcptun和BBR</a></li>
+<li><a href="#kcptun对比bbr">2. kcptun对比BBR</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org92d5927" class="outline-2">
+<h2 id="kcptun和bbr"><a id="org92d5927"></a><span class="section-number-2">1</span> kcptun和BBR</h2>
+<div class="outline-text-2" id="text-kcptun和bbr">
 <p>
-连着几天每天都写blog写烦了，词穷，还耽误时间。直接放整理的笔记吧，再说一遍
-<code>ipython notebook</code> 真是好东西啊！
+心血来潮体验了一把kcptun，从此过上了在线看1080p无压力的幸福生活。
 </p>
 
 <p>
-<a href="http://nbviewer.jupyter.org/gist/bigfang/e96181161e9b698a6422cc4cd81970b7">jupyter nbviewer</a>
+然后又试了一把BBR，生活质量同样也达到了1080p。
 </p>
 
-<script src="https://gist.github.com/bigfang/e96181161e9b698a6422cc4cd81970b7.js"></script>
-
 <p>
-忽然意识到这样用 <code>script</code> 标签来加载内容其实很不利于SEO，但是我懒，算了。
+kcptun安装配置并不复杂，不过调参挺麻烦的；BBR需要内核版本&gt;=4.9，可以用=uname -r=查看，配置也还是蛮简单的：
 </p>
 
-<div id="outline-container-org6269e2e" class="outline-2">
-<h2 id="作为民科的研究计划"><a id="org6269e2e"></a>作为民科的研究计划</h2>
-<div class="outline-text-2" id="text-作为民科的研究计划">
-<p>
-这里连着两篇博文，虽然生成了图表让人很有成就感，但是一直和股票无关，所以我下面打
-算折腾下和股价相关的东西了，其实已经有了一个想法：/论坛发帖数量和股价之间的关系/。
-我是这样想的，在牛市或者熊市正在进行的时候，人们可能会有两种表现：
-</p>
-<ol class="org-ol">
-<li>发帖会大幅增加，因为难以抑制激动or羡慕嫉妒或者沮丧or幸灾乐祸的心情而导致强烈
-的倾诉欲</li>
-<li>回帖会大幅增加，因为看到楼主牛逼或者傻逼的样子而不由自主的想要表达敬仰or不屑
-或者嘲笑or同病相怜</li>
-</ol>
+<pre class="example">
+sudo modprobe tcp_bbr
+sudo sysctl net.core.default_qdisc=fq
+sudo sysctl net.ipv4.tcp_congestion_control=bbr
+</pre>
 
 <p>
-那么实际上是哪一种呢，统计一下发帖回帖数量和股价对比一下看出来了，而且这个实现起
-来似乎也不难的样子，下回就开始试试这个吧。
+稍稍解释一下这些命令:
+</p>
+
+<p>
+=modprobe tcp<sub>bbr</sub>=载入名为tcp<sub>bbr的内核模块</sub>，可以使用命令=lsmod | grep bbr=来确认是否载入成功。
+</p>
+
+<p>
+=sysctl net.core.default<sub>qdisc</sub>=fq=用来配置队列规则(queuing
+discipline)算法为=fq=，=qdisc=的算法跟流量控制密切相关，目前默认的是=fq<sub>codel</sub>=，和=fq=的一个区别是没有实现一个名为=pacing=的特性，而BBR正好需要这个特性才能正常工作。如果开启了BBR而该选项依然用默认的=fq<sub>codel</sub>=，会导致丢包率增加。在未来的linux
+4.13中，=fq<sub>codel</sub>=也将支持=pacing=。也就是说4.13之后，这条命令就可以不用执行了。
+</p>
+
+<p>
+运行=sysctl net.ipv4.tcp<sub>available</sub><sub>congestion</sub><sub>control</sub>=可以查看可用的拥塞控制算法，用=sysctl net.ipv4.tcp<sub>congestion</sub><sub>control</sub>=bbr=选择使用BBR
+</p>
+
+<p>
+要注意的是，这些命令改变的是运行中的系统，也就是说重启之后这些配置就没有了。你会发现，=sysctl=命令后面跟着的那些长长的参数，跟=/proc/sys=目录有着神奇的对应关系，至于为什么，那就是另一个故事了。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org40316f1" class="outline-2">
-<h2 id="数学限制了我的想象力"><a id="org40316f1"></a>数学限制了我的想象力</h2>
-<div class="outline-text-2" id="text-数学限制了我的想象力">
-<p>
-写到这里，我已经敏锐的发现了一个严重的问题，那就是对于这些数据，目前我自己能想到
-的玩法也就那么几种，复杂度的上限就是我能写出的最复杂的SQL而已。换句话说，就算是
-玩法的复杂度达到了我能力的极限，分析出来的结果对于一个思维能力正常的人来说依然是
-直观的，容易理解的。他会这样对我说："哦，你用工具节省了统计的时间。“而不是像这样：
-"咦，这个结论你是怎么得到的？“原因也显而易见：*数学限制了我的想象力*，因此趁着寒
-假要买书来看看了。
-</p>
+<div id="outline-container-org7339c93" class="outline-2">
+<h2 id="kcptun对比bbr"><a id="org7339c93"></a><span class="section-number-2">2</span> kcptun对比BBR</h2>
+<div class="outline-text-2" id="text-kcptun对比bbr">
+<ul class="org-ul">
+<li>kcptun是双端优化，需要安装一个客户端；BBR是单端优化，只需要服务端开启</li>
+<li>kcptun以带宽换网速，据说带宽消耗还是蛮可观的；BBR似乎不会特别消耗带宽</li>
+<li>kcptun若要达到最优效果，需要根据网络状况进行配置，配置项复杂又专业；BBR没啥配置，开启即可</li>
+<li>我个人感觉，kcptun比BBR稍微快了那么一点点</li>
+<li>两者同时使用，使我产生了生活质量又上升了一点点的错觉</li>
+</ul>
 </div>
 </div>
 
@@ -86,9 +101,9 @@
 </div>
     <div>
       <div class="post-meta">
-        <span title="post date" class="post-info">2018-01-31</span>
+        <span title="post date" class="post-info">2017-08-08</span>
         <span title="last modification date" class="post-info">2019-01-18</span>
-        <span title="tags" class="post-info"><a href="/tags/pandas/">pandas</a>, <a href="/tags/matplotlib/">matplotlib</a>, <a href="/tags/seaborn/">seaborn</a>, <a href="/tags/python/">python</a>, <a href="/tags/集思录/">集思录</a></span>
+        <span title="tags" class="post-info">N/A</span>
         <span title="author" class="post-info">bigfang</span>
       </div>
       <section>
@@ -96,8 +111,8 @@
         <div id="disqus_thread"></div>
         <script type="text/javascript">
           //var disqus_developer = 1;
-          var disqus_identifier = "/blog/2018-01-31/analyze-jisilu-2.5";
-          var disqus_url = "http://bigfang.net/blog/2018-01-31/analyze-jisilu-2.5";
+          var disqus_identifier = "/blog/2017-08-08/过上了在线看1080p的幸福生活";
+          var disqus_url = "http://bigfang.net/blog/2017-08-08/过上了在线看1080p的幸福生活";
           var disqus_shortname = 'bigfang';
           /* * * DON'T EDIT BELOW THIS LINE * * */
           (function() {

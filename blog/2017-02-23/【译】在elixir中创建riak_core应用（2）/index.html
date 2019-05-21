@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>【译】在Elixir中创建riak_core应用（2） - ╮(╯3╰)╭</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="bigfang" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
+  </head>
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="/">╮(╯3╰)╭</a></h1>
+        <p>虽然不太明白，但是好厉害啊</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/bigfang">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="bigfang.net">
+        </form>
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>【译】在Elixir中创建riak_core应用（2）</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgdeb98a1">0.1. 原文：[[https://medium.com/@GPad/create-a-riak-core-application-in-elixir-part-2-88bdec73f368][Create</a></li>
+</ul>
+</li>
+<li><a href="#在elixir中创建riak_core应用2">1. 在Elixir中创建riak<sub>core应用</sub>（2）</a>
+<ul>
+<li><a href="#节点虚拟节点和组织他们的环">1.1. 节点，虚拟节点和组织他们的环</a></li>
+<li><a href="#启动riak_core程序">1.2. 启动riak<sub>core程序</sub></a></li>
+<li><a href="#内存中的kv">1.3. 内存中的KV</a></li>
+</ul>
+</div>
+</div>
+<p>
+越翻越觉得汗，水平太臭，一边翻译一边就能发现自己的错误，真怕误人子弟，建议对照英文原文看。
+</p>
+
+<div id="outline-container-orgdeb98a1" class="outline-3">
+<h3 id="orgdeb98a1"><span class="section-number-3">0.1</span> 原文：[[<a href="https://medium.com/@GPad/create-a-riak-core-application-in-elixir-part-2-88bdec73f368">https://medium.com/@GPad/create-a-riak-core-application-in-elixir-part-2-88bdec73f368</a>][Create</h3>
+<div class="outline-text-3" id="text-0-1">
+<p>
+a riak<sub>core</sub> application in Elixir (Part 2)]]
+</p>
+<p>
+:CUSTOM<sub>ID</sub>: 原文create-a-riak<sub>core</sub>-application-in-elixir-part-2
+</p>
+</div>
+</div>
+
+<div id="outline-container-org58e6862" class="outline-2">
+<h2 id="在elixir中创建riak_core应用2"><a id="org58e6862"></a><span class="section-number-2">1</span> 在Elixir中创建riak<sub>core应用</sub>（2）</h2>
+<div class="outline-text-2" id="text-在elixir中创建riak_core应用2">
+<p>
+首先，感谢所有读过我<a href="https://medium.com/@GPad/create-a-riak-core-application-in-elixir-part-1-41354c1f26c3">之前一篇</a>文章的人，
+在本篇文章中，我们将继续使用前文的代码，并增加一些新的功能，你可以在<a href="https://github.com/gpad/no_slides">这里</a>找到最终版本。
+</p>
+
+<p>
+我们将添加的第一个功能是经典的Ping。
+</p>
+
+
+<div class="figure">
+<p><img src="https://cdn-images-1.medium.com/max/1600/0*p1k9GZI8FK0vUMyt.jpg" alt="0*p1k9GZI8FK0vUMyt.jpg" />
+</p>
+<p><span class="figure-number">Figure 1: </span>If you played the original then you are old as I am :-)</p>
+</div>
+
+<p>
+开始之前，快速回顾一下，我们已经有了一个简单的"空"应用，它可以编译并用下面的命令在三个不同的环境下运行：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"># this is node 1
+MIX_ENV=gpad_1 iex --name gpad_1@127.0.0.1 -S mix run
+
+# this is node 2
+MIX_ENV=gpad_2 iex --name gpad_2@127.0.0.1 -S mix run
+
+# this is node 3
+MIX_ENV=gpad_3 iex --name gpad_3@127.0.0.1 -S mix run
+</pre>
+</div>
+
+<p>
+我们要做的是增加一个简单的可以在控制台中使用的=ping=，用来展示集群如何工作。
+</p>
+</div>
+
+<div id="outline-container-orgaee6363" class="outline-3">
+<h3 id="节点虚拟节点和组织他们的环"><a id="orgaee6363"></a><span class="section-number-3">1.1</span> 节点，虚拟节点和组织他们的环</h3>
+<div class="outline-text-3" id="text-节点虚拟节点和组织他们的环">
+<p>
+riak<sub>core的主要概念之一是与</sub><a href="http://docs.basho.com/riak/kv/2.2.0/learn/concepts/clusters/#the-ring">环</a>相关的虚拟节点的概念
+</p>
+
+
+<div class="figure">
+<p><img src="imgs/riak-ring.png" alt="riak-ring.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>riak-ring</p>
+</div>
+
+<p>
+环的想法很简单，你应该取得你在程序中管理的所有可能的值（这被成为键空间）并进行分区。
+例如riak<sub>core使用经典的hash函数把二进制串计算出一个值</sub>，代码类似这样：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">iex(1)&gt; key = "gpad"
+"gpad"
+iex(2)&gt; idx = :erlang.term_to_binary(key) |&gt; :crypto.sha
+&lt;&lt;211, 108, 199, 240, 242, 57, 27, 91, 139, 82, 154, 145, 27, 215, 191, 24, 107, 77, 162, 202&gt;&gt;
+iex(3)&gt; &lt;&lt; v::unsigned-big-integer-size(160) &gt;&gt; = idx
+&lt;&lt;211, 108, 199, 240, 242, 57, 27, 91, 139, 82, 154, 145, 27, 215, 191, 24, 107, 77, 162, 202&gt;&gt;
+iex(4)&gt; v
+1207022950459909619005619617169028319269647917770
+iex(5)&gt;
+</pre>
+</div>
+
+<p>
+如你所见，我们将一个单词作为作为键并转为二进制串，然后使用=:crypt.sha=对它进行hash运算，最后，我们使用了
+<a href="https://hexdocs.pm/elixir/Kernel.SpecialForms.html#%3C%3C%3E%3E/1-binary-bitstring-matching">二进制模式匹配</a>
+打印了它的值，值的范围在0到2<sup>160之间</sup>
+</p>
+
+<p>
+riak<sub>core默认把键空间</sub>（2<sup>160</sup>）分割为64个分区（partition），每个分区负责管理（/处理/）环上的一段（segment）。
+这样的单个分区被成为虚拟节点（/vnode/），虚拟节点分布在真实的节点上，这样，当我们添加或删除节点时，可以做到尽可能少的数据传输。
+（更多的细节将在下一篇文章中介绍）
+</p>
+
+<p>
+我们身处BEAM的世界中，所以很自然就会想到将每个/vnode/映射到一个Erlang的进程。Riak<sub>core非常不错的提供了一个</sub><a href="http://erlang.org/doc/design_principles/des_princ.html#id69904">behaviour</a>来帮助我们实现vnode进程。在Elixir中使用行为（behaviour）
+也非常简单。我建议在=lib/no<sub>slides</sub>=中创建一个名为=NoSlides.VNode=的模块，然后像下面这样声明=riak<sub>core</sub><sub>vnode</sub>=行为：
+</p>
+
+<pre class="example">
+defmodule NoSlides.VNode do
+  @behaviour :riak_core_vnode
+end
+</pre>
+
+<p>
+如果这是你尝试编译一下工程，你会得到这样一些告警信息*warning: undefined
+behaviour function &#x2026;*。这是因为我们还没有实现这些行为。
+如果你熟悉面向对象编程，你可以把行为想像成接口，模块应该实现一系列的函数，并在一个确定的上下文中执行，下面是我们看到的告警：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">warning: undefined behaviour function delete/1
+warning: undefined behaviour function encode_handoff_item/2
+warning: undefined behaviour function handle_command/3
+warning: undefined behaviour function handle_coverage/4
+warning: undefined behaviour function handle_exit/3
+warning: undefined behaviour function handle_handoff_command/3
+warning: undefined behaviour function handle_handoff_data/2
+warning: undefined behaviour function handoff_cancelled/1
+warning: undefined behaviour function handoff_finished/2
+warning: undefined behaviour function handoff_starting/2
+warning: undefined behaviour function init/1
+warning: undefined behaviour function is_empty/1
+warning: undefined behaviour function terminate/2
+</pre>
+</div>
+
+<p>
+应该在模块中实现下面这些函数，这些函数会在触发特定事件时被调用：
+</p>
+
+<ul class="org-ul">
+<li><b>init/1</b> &#x2013;
+当虚拟节点创建时被调用，它和<a href="https://hexdocs.pm/elixir/GenServer.html#c:init/1">GenServer</a>
+的/init/非常相似。它接收一个数组作为参数，数组里是vnode负责管理的分区的值。该函数返回进程的状态（state）。在其他的回调函数中，
+进程状态总是作为最后一个传入的参数。</li>
+<li><b>terminate/2</b> &#x2013;
+当虚拟节点终止时被调用，它接收reason（原子类型）和state作为参数。</li>
+<li><b>handle<sub>exit</sub>/3</b> &#x2013;
+当vnode<a href="http://erlang.org/doc/reference_manual/processes.html#id87759">关联</a>的进程死亡时，
+该函数被调用。它接收死亡进程的pid，reason和state。你可以返回={:noreply, state}=来继续（运行程序）。</li>
+<li><b>delete/1</b> &#x2013;
+当需要删除与vnode关联的数据时调用，和其他函数一样，它接收state作为参数并返回={:ok, new<sub>state</sub>}=。</li>
+<li><b>handle<sub>command</sub>/3</b> &#x2013;
+当vnode执行命令（command）时被调用，这个函数被用来实现我们自己的命令。</li>
+<li><b>handle<sub>coverage</sub>/4</b> &#x2013;
+当我们创建<a href="https://marianoguerra.github.io/little-riak-core-book/listing-keys-from-a-bucket.html">coverage命令</a>时调用。我们将在下一篇文章中处理这种类型的命令。</li>
+<li>剩下的函数都和<a href="https://github.com/basho/riak_core/wiki/Handoffs">handoff过程</a>（handoffs
+procedure）有关，我们将在下一篇中讨论</li>
+</ul>
+
+<p>
+当实现最后一个函数=start<sub>vnode</sub>/1=后，系统就可以正常工作了，最终，你的模块看起来是这样：
+</p>
+
+<pre class="example">
+
+defmodule NoSlides.VNode do
+  @behaviour :riak_core_vnode
+
+  def start_vnode(partition) do
+    :riak_core_vnode_master.get_vnode_pid(partition, __MODULE__)
+  end
+
+  def init([partition]) do
+    {:ok, partition}
+  end
+
+  def handle_command(request, sender, state) do
+    # we work here!!!
+  end
+
+  def handoff_starting(_dest, state) do
+    {true, state}
+  end
+
+  def handoff_cancelled(state) do
+    {:ok, state}
+  end
+
+  def handoff_finished(_dest, state) do
+    {:ok, state}
+  end
+
+  def handle_handoff_command(_fold_req, _sender, state) do
+    {:noreply, state}
+  end
+
+  def is_empty(state) do
+    {true, state}
+  end
+
+  def terminate(_reason, _state) do
+    :ok
+  end
+
+  def delete(state) do
+    {:ok, state}
+  end
+
+  def handle_handoff_data(_bin_data, state) do
+    {:reply, :ok, state}
+  end
+
+  def encode_handoff_item(_k, _v) do
+  end
+
+  def handle_coverage(_req, _key_spaces, _sender, state) do
+    {:stop, :not_implemented, state}
+  end
+
+  def handle_exit(_pid, _reason, state) do
+    {:noreply, state}
+  end
+
+end
+</pre>
+
+<p>
+真正的工作在函数=handle<sub>command</sub>/3=里实现，使用模式匹配（和GenServer类似），我们像这样来实现handle<sub>command</sub>
+</p>
+
+<pre class="example">
+def handle_command({:ping, v}, _sender, state) do
+  {:reply, {:pong, v + 1}, state}
+end
+</pre>
+
+<p>
+现在，我们已经实现了ping命令。那么如何从控制台执行？我们需要引入一个我喜欢称之为*服务*的概念。
+服务是一个模块，它包装了一些操作，可以与riak<sub>core对外开放的命令交互</sub>。服务应该在riak<sub>core中注册</sub>，
+这样riak<sub>core才会知道是什么节点暴露了服务</sub>。代码如下：
+</p>
+
+<pre class="example">
+defmodule NoSlides.Service do
+
+  def ping(v\\1) do
+    idx = :riak_core_util.chash_key({"noslides", "ping#{v}"})
+    pref_list = :riak_core_apl.get_primary_apl(idx, 1, NoSlides.Service)
+
+    [{index_node, _type}] = pref_list
+
+    :riak_core_vnode_master.sync_command(index_node, {:ping, v}, NoSlides.VNode_master)
+  end
+
+end
+</pre>
+
+<p>
+在第4行，我们算出了要存储的值的id。这个id是/键空间/上的一个值。利用这个*idx*，我们可以用*get<sub>primary</sub><sub>apl</sub>*（第5行）向riak<sub>core请求一个</sub>*首选项列表*（preference
+list）。首选项列表是一个集合，它包含了哪些节点处理哪些分区的信息。当调用/get<sub>primary</sub><sub>apl</sub>/时，
+我们需要列表的长度1（第二个参数）和一个实现了*NoSlides.Service*的节点（第三个参数）。在这个例子中，我们只请求了一个元素，
+因为我们只希望在一个节点上执行命令，下一篇文章中，我们会讨论/冗余/（redundancy）。从首选项列表中，我们获取了*index<sub>node</sub>*，
+它用于标识执行命令的真实的或是虚拟的节点。这个节点对具有*idx*标识的数据拥有所有权。
+</p>
+
+<p>
+在第9行，我们用*index<sub>node</sub>*作为参数调用函数=:riak<sub>core</sub><sub>vnode</sub><sub>master.sync</sub><sub>command</sub>=。该函数是同步的，
+也就是说直到vnode模块完成工作后它才会返回。如果查看=:riak<sub>core</sub><sub>vnode</sub><sub>master</sub>=的代码，你会发现=:riak<sub>core</sub><sub>vnode</sub><sub>master.command</sub>=，
+这个函数采用的则是异步的方式。
+</p>
+
+<p>
+你可能还发现了=sync<sub>spawn</sub><sub>command</sub>=，它类似于=sync<sub>command</sub>=，查看源码的话，你会发现这样的注释
+</p>
+
+<pre class="example">
+%% Send a synchronous spawned command to an individual Index/Node
+%% combination.
+%% Will not return until the vnode has returned, but the
+%%% vnode_master will
+%% continue to handle requests.
+sync_spawn_command({Index,Node}, Msg, VMaster) -&gt;
+</pre>
+
+<p>
+事实上并不是这样的，这些可能是老的注释或者是老的实现，最后要说的是，riak<sub>core约定</sub>，
+vnode的名称带有=<sub>master</sub>=后缀（*NoSlides.VNode<sub>master</sub>*）
+</p>
+
+<p>
+现在，我们已经实现了*Service*和*VNode*，还需要把所有的这些集中在一起，为此，我们要从头开始&#x2026;
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf0263df" class="outline-3">
+<h3 id="启动riak_core程序"><a id="orgf0263df"></a><span class="section-number-3">1.2</span> 启动riak<sub>core程序</sub></h3>
+<div class="outline-text-3" id="text-启动riak_core程序">
+<p>
+在OTP应用中，我们需要从一个实现了<a href="https://hexdocs.pm/elixir/Application.html">Application</a>行为的模块开始。
+如果你用mix创建了一个空的工程，那么你可能已经有了一个引入了=use Application=的名为=NoSlides=的模块，扔掉它并替换成这样：
+</p>
+
+<pre class="example">
+defmodule NoSlides do
+  use Application
+  require Logger
+
+  def start(_type, _args) do
+    case NoSlides.Supervisor.start_link do
+      {:ok, pid} -&gt;
+        :ok = :riak_core.register(vnode_module: NoSlides.VNode)
+        :ok = :riak_core_node_watcher.service_up(NoSlides.Service, self())
+        {:ok, pid}
+      {:error, reason} -&gt;
+        Logger.error("Unable to start NoSlides supervisor because: #{inspect reason}")
+    end
+  end
+
+end
+</pre>
+
+<p>
+第6行，我们启动了一个supervisor，稍后再来实现它。如果一切顺利，我们在第8行注册实现了vnode的模块，
+在第9行注册实现了服务的模块。
+</p>
+
+<p>
+supervisor的实现应该放在=lib/no<sub>slides</sub>/supervisor.ex=中，内容像是这样：
+</p>
+
+<pre class="example">
+defmodule NoSlides.Supervisor do
+  use Supervisor
+
+  def start_link do
+    # riak_core appends _sup to the application name.
+    Supervisor.start_link(__MODULE__, [], [name: :no_slides_sup])
+  end
+
+  def init(_args) do
+    children = [
+      worker(:riak_core_vnode_master, [NoSlides.VNode], id: NoSlides.VNode_master_worker)
+    ]
+    supervise(children, strategy: :one_for_one, max_restarts: 5, max_seconds: 10)
+  end
+
+end
+</pre>
+
+<p>
+这是一个经典的supervisor，但要注意一些细节，supervisor的id应当以=<sub>sup</sub>=为结束（第6行），
+而工作者（worker）的id应当使用=<sub>master</sub><sub>worker</sub>=后缀（第11行）
+</p>
+
+<p>
+之后，我们可以使用下面的命令启动节点：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">MIX_ENV=gpad_1 iex --name gpad_1@127.0.0.1 -S mix run
+</pre>
+</div>
+
+<p>
+在IEx中，可以运行ping服务：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">Interactive Elixir (1.3.4) - press Ctrl+C to exit (type h() ENTER for help)
+iex(gpad_1@127.0.0.1)1&gt; NoSlides.Service.ping
+{:pong, 2}
+iex(gpad_1@127.0.0.1)2&gt; NoSlides.Service.ping(42)
+{:pong, 43}
+iex(gpad_1@127.0.0.1)3&gt;
+</pre>
+</div>
+
+<p>
+现在，我们可以加入更多的节点来运行/分布式的ping/，第一步，我们要在不同的控制台启动更多的节点：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"># this is node 1
+MIX_ENV=gpad_1 iex --name gpad_1@127.0.0.1 -S mix run
+
+# this is node 2
+MIX_ENV=gpad_2 iex --name gpad_2@127.0.0.1 -S mix run
+
+# this is node 3
+MIX_ENV=gpad_3 iex --name gpad_3@127.0.0.1 -S mix run
+</pre>
+</div>
+
+<p>
+现在可以将所有的节点连接起来了，在第二个节点的控制台键入：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">iex(gpad_2@127.0.0.1)1&gt; :riak_core.join('gpad_1@127.0.0.1')
+</pre>
+</div>
+
+<p>
+同样，在节点3执行相同的操作
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">iex(gpad_3@127.0.0.1)1&gt; :riak_core.join('gpad_1@127.0.0.1')
+</pre>
+</div>
+
+<p>
+如果查看节点1的控制台，那么会看到这样的日志：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">12:21:53.168 [info] 'gpad_2@127.0.0.1' joined cluster with status 'valid'
+12:22:39.155 [info] 'gpad_3@127.0.0.1' joined cluster with status 'joining'
+12:22:39.191 [info] 'gpad_3@127.0.0.1' changed from 'joining' to 'valid'
+</pre>
+</div>
+
+<p>
+现在，你可以使用下面的命令来请求riak<sub>core打印</sub>*环*的状态：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">{:ok, ring} = :riak_core_ring_manager.get_my_ring
+:riak_core_ring.pretty_print(ring, [:legend])
+</pre>
+</div>
+
+<p>
+你会看到这样的输出：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">============================= Nodes =============================
+Node a: 22 ( 34.4%) gpad_1@127.0.0.1
+Node b: 21 ( 32.8%) gpad_2@127.0.0.1
+Node c: 21 ( 32.8%) gpad_3@127.0.0.1
+============================= Ring =============================
+abcc|abcc|abcc|abcc|abcc|abcc|abcc|abcc|abcc|abcc|abca|abba|abba|abba|abba|abba|
+</pre>
+</div>
+
+<p>
+正如你所看到的，环被分成了64个分区，节点1拥有22个VNode，剩下两个节点各拥有21个，你同样可以在*observer*中看到：
+</p>
+
+
+<div class="figure">
+<p><img src="imgs/observer.png" alt="observer.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>observer</p>
+</div>
+
+<p>
+现在我们可以在VNode的实现中加入日志，这样就可以看到是哪个节点响应了ping（记得在模块顶部加入=require Logger=）
+</p>
+
+<pre class="example">
+def handle_command({:ping, v}, _sender, state) do
+  Logger.debug("Receive ping with value: #{v}")
+  {:reply, {:pong, v + 1}, state}
+end
+</pre>
+
+<p>
+在控制台，执行命令：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">iex(gpad_1@127.0.0.1)1&gt; NoSlides.Service.ping
+{:pong, 2}
+</pre>
+</div>
+
+<p>
+节点2上，就可以看到如下日志：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">12:43:00.822 [debug] Receive ping with value: 1
+</pre>
+</div>
+
+<p>
+我们已经有了一个非常简单的分布式的ping，如果改变传递给ping的值，能够看到响应ping的不同的节点。
+例如，如果使用42，则节点3会作出响应。
+</p>
+
+<p>
+现在，我们有了ping，这样我们就可以轻松的创建一个基于内存的键值存储。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdb1eb0b" class="outline-3">
+<h3 id="内存中的kv"><a id="orgdb1eb0b"></a><span class="section-number-3">1.3</span> 内存中的KV</h3>
+<div class="outline-text-3" id="text-内存中的kv">
+<p>
+现在我们已经了解如何连接服务和vnode，我们可以在服务模块上暴露=get=和=put=函数，来轻松创建一个内存键值存储，
+</p>
+
+<pre class="example">
+defmodule NoSlides.Service do
+
+ # ...
+
+ def put(k, v) do
+    idx = :riak_core_util.chash_key({"noslides", k})
+    pref_list = :riak_core_apl.get_primary_apl(idx, 1, NoSlides.Service)
+
+    [{index_node, _type}] = pref_list
+
+    :riak_core_vnode_master.command(index_node, {:put, {k, v}}, NoSlides.VNode_master)
+  end
+
+  def get(k) do
+    idx = :riak_core_util.chash_key({"noslides", k})
+    pref_list = :riak_core_apl.get_primary_apl(idx, 1, NoSlides.Service)
+
+    [{index_node, _type}] = pref_list
+
+    :riak_core_vnode_master.sync_command(index_node, {:get, k}, NoSlides.VNode_master)
+  end
+
+end
+</pre>
+
+<p>
+同样，在VNode中也要加上=get=和=put=的实现：
+</p>
+
+<pre class="example">
+defmodule NoSlides.VNode do
+
+  def init([partition]) do
+    {:ok, %{partition: partition, data: %{}}}
+  end
+
+  # ...
+
+  def handle_command({:put, {k, v}}, sender, state) do
+    Logger.debug("[put]: k: #{inspect k} v: #{inspect v}")
+    new_state = Map.update(state, :data, %{}, fn data -&gt; Map.put(data, k, v) end)
+    {:noreply, new_state}
+  end
+
+  def handle_command({:get, k}, sender, state) do
+    Logger.debug("[get]: k: #{inspect k}")
+    {:reply, Map.get(state.data, k, nil), state}
+  end
+
+end
+</pre>
+
+<p>
+现在，你可以从不同的节点上进行获取和添加的操作了。
+</p>
+
+<p>
+重启所有节点，但不需要重新执行加入节点的操作，在节点1的控制台，执行下面的命令：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">iex(gpad_1@127.0.0.1)1&gt; NoSlides.Service.put(:k, 42)
+:ok
+iex(gpad_1@127.0.0.1)2&gt; NoSlides.Service.get(:k)
+42
+</pre>
+</div>
+
+<p>
+检查节点2上的日志：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">iex(gpad_2@127.0.0.1)1&gt;
+19:31:30.634 [debug] [put]: k: :k v: 42
+19:31:39.242 [debug] [get]: k: :k
+</pre>
+</div>
+
+<p>
+同样，在节点3上也可以取值
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">iex(gpad_3@127.0.0.1)1&gt; NoSlides.Service.get(:k)
+42
+</pre>
+</div>
+
+<p>
+我们拥有了一个内存中的键值存储，你可以添加很多不同类型数据作为值：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">iex(gpad_1@127.0.0.1)9&gt; NoSlides.Service.put("gpad", %{ blogs: ["riak_core I", "riak_core II"] })
+:ok
+iex(gpad_1@127.0.0.1)10&gt; NoSlides.Service.get("gpad")
+%{blogs: ["riak_core I", "riak_core II"]}
+</pre>
+</div>
+
+<p>
+同样也可以是键：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">iex(gpad_1@127.0.0.1)11&gt; NoSlides.Service.put(%{a: 1, b: 2}, "gpad")
+:ok
+iex(gpad_1@127.0.0.1)12&gt; NoSlides.Service.get(%{a: 1, b: 2})
+"gpad"
+</pre>
+</div>
+
+<p>
+以一个简单的内存键值存储的作为开始，还有一些问题： *
+如果一个节点使用=:riak<sub>core.leave</sub>=离开集群，会发生什么？ *
+如果某个节点崩溃，会发生什么？ * 我们如何获取所有的键？
+</p>
+
+<p>
+我会在下一篇中尝试回答这些问题，如果你有任何问题或发现了什么错误，请不要犹豫，在下面留言吧。
+</p>
+
+<p>
+<i>作为译者，我的英文水平也很挫，如果读者发现任何问题，也请留言吧</i>
+</p>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2017-02-23</span>
+        <span title="last modification date" class="post-info">2019-01-18</span>
+        <span title="tags" class="post-info">N/A</span>
+        <span title="author" class="post-info">bigfang</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2017-02-23/【译】在elixir中创建riak_core应用（2）";
+          var disqus_url = "http://bigfang.net/blog/2017-02-23/【译】在elixir中创建riak_core应用（2）";
+          var disqus_shortname = 'bigfang';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-37180058-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:bitair &lt;at&gt; gmail &lt;dot&gt; com">bigfang</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

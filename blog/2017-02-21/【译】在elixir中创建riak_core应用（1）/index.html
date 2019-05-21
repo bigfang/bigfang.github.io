@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>【译】在Elixir中创建riak_core应用（1） - ╮(╯3╰)╭</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="bigfang" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
+  </head>
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="/">╮(╯3╰)╭</a></h1>
+        <p>虽然不太明白，但是好厉害啊</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/bigfang">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="bigfang.net">
+        </form>
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>【译】在Elixir中创建riak_core应用（1）</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org5fe57cd">0.0.1. 原文：[[https://medium.com/@GPad/create-a-riak-core-application-in-elixir-part-1-41354c1f26c3][Create</a></li>
+</ul>
+</li>
+<li><a href="#在elixir中创建riak_core应用i">0.1. 在Elixir中创建riak<sub>core应用</sub>（I）</a>
+<ul>
+<li><a href="#如何开始">0.1.1. 如何开始</a></li>
+<li><a href="#多节点环境">0.1.2. 多节点环境</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org770ecda">1. [[https://twitter.com/heinz_gies][Heinz N.</a></li>
+<li><a href="#org5361400">2. [[https://github.com/kanatohodets][Ben</a></li>
+<li><a href="#org3f9b775">3. [[https://twitter.com/warianoguerra][Mariano</a></li>
+<li><a href="#orgd337495">4. [[https://twitter.com/rzezeski][Ryan</a></div>
+</div>
+<p>
+最近不知道咋了，有些高产啊，目前网上似乎没人翻译这个，争取周末前把三篇翻完
+</p>
+
+<div id="outline-container-org5fe57cd" class="outline-4">
+<h4 id="org5fe57cd"><span class="section-number-4">0.0.1</span> 原文：[[<a href="https://medium.com/@GPad/create-a-riak-core-application-in-elixir-part-1-41354c1f26c3">https://medium.com/@GPad/create-a-riak-core-application-in-elixir-part-1-41354c1f26c3</a>][Create</h4>
+<div class="outline-text-4" id="text-0-0-1">
+<p>
+a riak<sub>core</sub> application in Elixir (Part 1)]]
+</p>
+<p>
+:CUSTOM<sub>ID</sub>: 原文create-a-riak<sub>core</sub>-application-in-elixir-part-1
+</p>
+</div>
+</div>
+
+<div id="outline-container-org17db459" class="outline-3">
+<h3 id="在elixir中创建riak_core应用i"><a id="org17db459"></a><span class="section-number-3">0.1</span> 在Elixir中创建riak<sub>core应用</sub>（I）</h3>
+<div class="outline-text-3" id="text-在elixir中创建riak_core应用i">
+<p>
+12月3号（2016年），我在<a href="http://www.noslidesconf.net/#schedule">NoSlidesConf</a>做了一次关于riak<sub>core的演讲</sub>,
+为了用Elixir展示<a href="https://github.com/basho/riak_core">riak<sub>core</sub></a>一些特性，我写了<a href="https://github.com/gpad/no_slides">这个</a>简单的应用。
+</p>
+
+<p>
+在那以后，我决定写一篇关于在Elixir中使用riak<sub>core的教程</sub>，在Elixir中调用Erlang的库确实非常简单，
+比如这个app就是个很好的例子，网上有很多用Erlang（使用riak<sub>core</sub>）的例子，
+但遗憾的是，依然有很多"炼金术士"们并不熟悉Erlang的语法:-(
+</p>
+
+<p>
+本文中，我将描述如何创建一个空的Elixir应用，它只能作为多个节点在同一台机器上启动而没有其他功能，
+要等到下一篇文章，您才能看到实用的功能:-).
+</p>
+</div>
+
+<div id="outline-container-org2b8dd54" class="outline-4">
+<h4 id="如何开始"><a id="org2b8dd54"></a><span class="section-number-4">0.1.1</span> 如何开始</h4>
+<div class="outline-text-4" id="text-如何开始">
+<p>
+<a href="https://github.com/basho/riak_core">Riak<sub>core</sub></a>是由<a href="http://basho.com">basho</a>开发，从<a href="https://github.com/basho/riak">riakKV/riakTS</a>中剥离出来的一个独立的库。
+basho的这个<a href="https://github.com/basho/riak_core">Repo</a>对于Elixir应用来说并不容易使用，但是你可以检出代码作为"main
+source"。
+当然作为一名"炼金师"，你肯定非常熟悉<a href="https://hex.pm/">https://hex.pm/</a>（如果不是，那你该努力了:-)）
+在hex.pm里搜索riak<sub>core</sub>，你会发现<a href="https://hex.pm/packages/riak_core_ng">riak<sub>core</sub><sub>ng</sub></a>。
+这是从原库中<a href="https://github.com/project-fifo/riak_core">fork</a>出来的，
+由<a href="https://twitter.com/heinz_gies">Heinz N. Gies</a>维护的版本。
+</p>
+
+<p>
+开始之前，先介绍一下我的Erlang和Elixir的版本。本系列教程中，我会一直使用Elixir
+1.3.4和Erlang 18.3。 在测试时，我没能用Erlang
+19成功运行riak<sub>core</sub>。如果你查看basho的<a href="https://github.com/basho/riak_core">Repo</a>和
+riak<sub>core</sub><sub>ng的</sub><a href="https://hex.pm/packages/riak_core_ng">Repo</a>，你会发现其中包含了移植到Erlang
+19的工作，不过至今还未完成。
+我建议使用[kerl][kerl]或者[asdf][asdf]来管理Erlang的版本。如果你想用<a href="http://erlang.org/doc/apps/observer/observer_ug.html">observer</a>（你肯定想的:-)）。
+我建议在编译Erlang
+OTP的时候开启wx。如果你使用OSX，请看<a href="http://featurebranch.com/howto-getting-wx-to-work-with-erlang-r16b02-on-os-x/">这里</a>，
+Linux用户请看<a href="http://stackoverflow.com/questions/32934641/how-to-get-erlang-to-show-ui-components-debugger-and-observer-on-linux">这里</a>）。
+其他系统用户请尝试google。
+</p>
+
+<p>
+那么我们开始吧，附上=&#x2013;sup=参数，创建一个新的mix应用
+</p>
+
+<pre class="example">
+$ mix new no_slides --sup
+</pre>
+
+<p>
+用这种方法，我们创建了一个空的app，首先要做的是把riak<sub>core加入依赖项中</sub>。在=mix。exs=文件中加入如下内容：
+</p>
+
+<pre class="example">
+def application do
+  [applications: [:riak_core, :logger],
+   mod: {NoSlides, []}]
+end
+# ...
+defp deps do
+  [
+    {:riak_core, "~&gt; 2.2.8", hex: :riak_core_ng}
+  ]
+end
+</pre>
+
+<p>
+记得要把=:riak<sub>core</sub>=放在放在第一位，否则可能会发生一些奇怪的事情:-D.
+</p>
+
+<p>
+然后，就像平时一样，获取依赖
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">$ mix deps.get
+</pre>
+</div>
+
+<p>
+现在可以用下面的命令运行你的第一个riak<sub>core</sub> app了：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">$ iex -S mix run
+</pre>
+</div>
+
+<p>
+你看到了好多的error，首先你应该用参数=&#x2013;name &lt;node<sub>name</sub>&gt;=运行node，我的是这样：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">$ iex --name gpad@127.0.0.1 -S mix run
+</pre>
+</div>
+
+<p>
+这是使用<a href="http://erlang.org/doc/reference_manual/distributed.html">全名</a>启动程序的方式，
+之后，你会得到另一个错误，需要为你的代码配置schema和一些其他的设置。schema存在在=deps/riak<sub>core</sub>/priv=目录中，
+使用下面的命令，将其拷贝到你的=priv=目录下
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">$ cp -r deps/riak_core/priv .
+</pre>
+</div>
+
+<p>
+最后，要告诉riak<sub>core如何管理节点的必需的信息</sub>，我建议在=config/config.exs=文件中加入如下内容：
+</p>
+
+<pre class="example">
+config :riak_core,
+  ring_state_dir: 'ring_data_dir',
+  handoff_port: 8099,
+  handoff_ip: '127.0.0.1',
+  schema_dirs: ['priv']
+config :sasl,
+  errlog_type: :error
+</pre>
+
+<p>
+配置项=riak<sub>core</sub>=是riak<sub>core作为单节点启动的必要配置</sub>（多节点时我们会做一些小修改），
+我们告诉riak<sub>core在哪里保存</sub><a href="https://github.com/basho/riak_core/wiki#ring">环</a>上的数据（集群配置）。
+管理<a href="https://github.com/basho/riak_core/wiki/Handoffs">handoff</a>的IP/端口，以及在哪里找到schema。
+最后的配置也同样重要，我们告诉<a href="http://erlang.org/doc/man/sasl_app.html">sasl</a>应用只打印错误日志。
+</p>
+
+<p>
+至此，你终于可以启动一个单节点的riak<sub>core应用了</sub>：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">$ iex --name gpad@127.0.0.1 -S mix run
+</pre>
+</div>
+
+<p>
+<b>万岁！！！</b>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3978894" class="outline-4">
+<h4 id="多节点环境"><a id="org3978894"></a><span class="section-number-4">0.1.2</span> 多节点环境</h4>
+<div class="outline-text-4" id="text-多节点环境">
+<p>
+我们当然希望用riak<sub>core创建一个分布式的应用</sub>，所以我们的应用应当运行在不同的节点上。在开发时，在一台机器上面运行多个节点会更加简单易行。
+为了做到这一点，有必要让每个节点用不同的配置来运行，我们可以用mix的<a href="http://elixir-lang.org/getting-started/mix-otp/introduction-to-mix.html#environments">environments</a>达到这一目的。
+我们为每个环境（environment）添加不同的配置文件，通过这些不同的环境来区分各个节点。
+在本例中，我把环境命名为=gpad<sub>1</sub>=、=gpad<sub>2</sub>=和=gpad<sub>3</sub>=。我建议在=config=目录中添加三个文件=gpad<sub>1.exs</sub>=、=gpad<sub>2.exs</sub>=和=gpad<sub>3.exs</sub>=。
+修改=config.exs=，在文件末尾添加以下内容
+</p>
+
+<pre class="example">
+import_config “#{Mix.env}.exs”
+</pre>
+
+<p>
+在每个新文件中，你需要设置riak<sub>core的配置</sub>，使其不会与在同一台机器上运行的其他节点冲突，因此我们有：
+</p>
+
+<p>
+gpad<sub>1.exs</sub>
+</p>
+
+<pre class="example">
+use Mix.Config
+config :riak_core,
+  node: 'gpad_1@127.0.0.1',
+  web_port: 8198,
+  handoff_port: 8199,
+  ring_state_dir: 'ring_data_dir_1',
+  platform_data_dir: 'data_1'
+</pre>
+
+<p>
+gpad<sub>2.exs</sub>
+</p>
+
+<pre class="example">
+use Mix.Config
+config :riak_core,
+  node: 'gpad_2@127.0.0.1',
+  web_port: 8298,
+  handoff_port: 8299,
+  ring_state_dir: 'ring_data_dir_2',
+  platform_data_dir: 'data_2'
+</pre>
+
+<p>
+gpad<sub>3.exs</sub>
+</p>
+
+<pre class="example">
+use Mix.Config
+config :riak_core,
+  node: 'gpad_3@127.0.0.1',
+  web_port: 8398,
+  handoff_port: 8399,
+  ring_state_dir: 'ring_data_dir_3',
+  platform_data_dir: 'data_3'
+</pre>
+
+<p>
+这样，我们就有了三个不同的环境，你可以在三个不同的终端下启动它们，在开始之前，请记得要使用Erlang
+18，
+因为我们需要在不同的环境下编译这个应用，因此要在不同的终端下运行下面的每行命令：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"># this is node 1
+MIX_ENV=gpad_1 iex --name gpad_1@127.0.0.1 -S mix run
+
+# this is node 2
+MIX_ENV=gpad_2 iex --name gpad_2@127.0.0.1 -S mix run
+
+# this is node 3
+MIX_ENV=gpad_3 iex --name gpad_3@127.0.0.1 -S mix run
+</pre>
+</div>
+
+<p>
+如果你希望像之前一样，仍然使用命令=iex &#x2013;name gpad@127.0.0.1 -S mix run=来运行一个单节点，
+你需要添加一个名为=dev。exs=的文件，它只有一行：
+</p>
+
+<pre class="example">
+use Mix.Config
+</pre>
+
+<p>
+现在，你应该能够在同一台机器上运行三个不同的节点了。
+</p>
+
+<p>
+<b>做的不错！！！</b>
+</p>
+
+<p>
+下一篇中，我们会尝试添加一个简单的ping功能并将三个节点连接在一起。
+</p>
+
+<p>
+在结束前，我需要感谢： *
+<a href="http://basho.com">basho</a>，他们创造了这个<a href="https://github.com/basho/riak_core">库</a>和<a href="http://basho.com/search/?q=riak_core">文档</a>。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org770ecda" class="outline-2">
+<h2 id="org770ecda"><span class="section-number-2">1</span> [[<a href="https://twitter.com/heinz_gies">https://twitter.com/heinz_gies</a>][Heinz N.</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Gies]]，他创造了可以在Elixir中使用的<a href="https://hex.pm/packages/riak_core_ng">riak<sub>core</sub><sub>ng</sub></a>。
+</p>
+</div>
+</div>
+<div id="outline-container-org5361400" class="outline-2">
+<h2 id="org5361400"><span class="section-number-2">2</span> [[<a href="https://github.com/kanatohodets">https://github.com/kanatohodets</a>][Ben</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Tyler]]，他在<a href="http://www.elixirconf.eu/elixirconf2016/ben-tyler">ElixirConf.EU</a>上发表了精彩的演讲。
+</p>
+</div>
+</div>
+<div id="outline-container-org3f9b775" class="outline-2">
+<h2 id="org3f9b775"><span class="section-number-2">3</span> [[<a href="https://twitter.com/warianoguerra">https://twitter.com/warianoguerra</a>][Mariano</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Guerra]]，他写了一本介绍riak<sub>core的精彩的</sub><a href="https://marianoguerra.github.io/little-riak-core-book/">书</a>。
+</p>
+</div>
+</div>
+<div id="outline-container-orgd337495" class="outline-2">
+<h2 id="orgd337495"><span class="section-number-2">4</span> [[<a href="https://twitter.com/rzezeski">https://twitter.com/rzezeski</a>][Ryan</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Zezeski]]，他的关于riak<sub>core博客</sub>。 *
+正在阅读这篇文章并尝试riak<sub>core的你</sub>，谢谢。
+</p>
+
+<p>
+敬请期待，下次再见！！！
+</p>
+</div>
+</div>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2017-02-21</span>
+        <span title="last modification date" class="post-info">2019-01-18</span>
+        <span title="tags" class="post-info">N/A</span>
+        <span title="author" class="post-info">bigfang</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2017-02-21/【译】在elixir中创建riak_core应用（1）";
+          var disqus_url = "http://bigfang.net/blog/2017-02-21/【译】在elixir中创建riak_core应用（1）";
+          var disqus_shortname = 'bigfang';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-37180058-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:bitair &lt;at&gt; gmail &lt;dot&gt; com">bigfang</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

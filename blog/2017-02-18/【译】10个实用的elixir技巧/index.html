@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>【译】10个实用的Elixir技巧 - ╮(╯3╰)╭</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="bigfang" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
+  </head>
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="/">╮(╯3╰)╭</a></h1>
+        <p>虽然不太明白，但是好厉害啊</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/bigfang">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="bigfang.net">
+        </form>
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>【译】10个实用的Elixir技巧</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgbeac04d">0.1. 原文：[[https://medium.com/blackode/10-killer-elixir-tips-2a9be1bec9be][10</a></li>
+</ul>
+</li>
+<li><a href="#多个or">1. 1. 多个[OR]</a></li>
+<li><a href="#iterm">2. 2. i(term)</a></li>
+<li><a href="#自定义iex配置">3. 3. 自定义iex配置</a></li>
+<li><a href="#自定义sigils">4. 4. 自定义Sigils</a>
+<ul>
+<li><a href="#自定义sigils-1">4.1. 自定义Sigils</a></li>
+<li><a href="#用法">4.2. 用法</a></li>
+</ul>
+</li>
+<li><a href="#自定义错误">5. 5. 自定义错误</a>
+<ul>
+<li><a href="#用法-1">5.1. 用法</a></li>
+</ul>
+</li>
+<li><a href="#从嵌套的map中取值">6. 6. 从嵌套的Map中取值</a></li>
+<li><a href="#with语句">7. 7. with语句</a></li>
+<li><a href="#编写protocol">8. 8. 编写Protocol</a>
+<ul>
+<li><a href="#定义一个protocol">8.1. 定义一个Protocol</a></li>
+<li><a href="#用法-2">8.2. 用法</a></li>
+</ul>
+</li>
+<li><a href="#三元操作符">9. 9. 三元操作符</a></li>
+<li><a href="#section">10. 10. ????</a></div>
+</div>
+<p>
+这篇文章质量一般，但是代码多行文少，比较容易看懂，适合我这种英语水平比较挫的来练手。
+</p>
+
+<div id="outline-container-orgbeac04d" class="outline-3">
+<h3 id="orgbeac04d"><span class="section-number-3">0.1</span> 原文：[[<a href="https://medium.com/blackode/10-killer-elixir-tips-2a9be1bec9be">https://medium.com/blackode/10-killer-elixir-tips-2a9be1bec9be</a>][10</h3>
+<div class="outline-text-3" id="text-0-1">
+<p>
+Killer Elixir Tips]]
+</p>
+<p>
+:CUSTOM<sub>ID</sub>: 原文10-killer-elixir-tips
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3bb6034" class="outline-2">
+<h2 id="多个or"><a id="org3bb6034"></a><span class="section-number-2">1</span> 1. 多个[OR]</h2>
+<div class="outline-text-2" id="text-多个or">
+<pre class="example">
+# Regular Approach
+find = fn(x) when x&gt;10 or x&lt;5 or x==7 -&gt; x end
+
+# Our Hack
+hell = fn(x) when true in [x&gt;10,x&lt;5,x==7] -&gt; x end
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgb8f4d2e" class="outline-2">
+<h2 id="iterm"><a id="orgb8f4d2e"></a><span class="section-number-2">2</span> 2. i(term)</h2>
+<div class="outline-text-2" id="text-iterm">
+<p>
+打印任何term的数据类型信息，请在=iex=中尝试一下如此神奇的魔法
+</p>
+
+<pre class="example">
+iex&gt; i(1..5)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org0a8bfa1" class="outline-2">
+<h2 id="自定义iex配置"><a id="org0a8bfa1"></a><span class="section-number-2">3</span> 3. 自定义iex配置</h2>
+<div class="outline-text-2" id="text-自定义iex配置">
+<p>
+将下面的内容保存为=.iex.exs=并放至home目录中，然后打开iex查看奇妙的变化吧
+</p>
+
+<pre class="example">
+# IEx.configure colors: [enabled: true]
+# IEx.configure colors: [ eval_result: [ :cyan, :bright ] ]
+IO.puts IO.ANSI.red_background() &lt;&gt; IO.ANSI.white() &lt;&gt; " ❄❄❄ Good Luck with Elixir ❄❄❄ " &lt;&gt; IO.ANSI.reset
+Application.put_env(:elixir, :ansi_enabled, true)
+IEx.configure(
+ colors: [
+   eval_result: [:green, :bright] ,
+   eval_error: [[:red,:bright,"Bug Bug ..!!"]],
+   eval_info: [:yellow, :bright ],
+ ],
+ default_prompt: [
+   "\e[G",    # ANSI CHA, move cursor to column 1
+    :white,
+    "I",
+    :red,
+    "❤" ,       # plain string
+    :green,
+    "%prefix",:white,"|",
+     :blue,
+     "%counter",
+     :white,
+     "|",
+    :red,
+    "▶" ,         # plain string
+    :white,
+    "▶▶"  ,       # plain string
+      # ❤ ❤-»" ,  # plain string
+    :reset
+  ] |&gt; IO.ANSI.format |&gt; IO.chardata_to_string
+)
+</pre>
+
+
+<div class="figure">
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*iy-IELdB8fjTo5H0sABlBQ.png" alt="1*iy-IELdB8fjTo5H0sABlBQ.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>iex custom configuration</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org616f61b" class="outline-2">
+<h2 id="自定义sigils"><a id="org616f61b"></a><span class="section-number-2">4</span> 4. 自定义Sigils</h2>
+<div class="outline-text-2" id="text-自定义sigils">
+<p>
+让名为=x=的sigil调用各自的=sigil<sub>x</sub>=定义
+</p>
+</div>
+
+<div id="outline-container-org41ff384" class="outline-3">
+<h3 id="自定义sigils-1"><a id="org41ff384"></a><span class="section-number-3">4.1</span> 自定义Sigils</h3>
+<div class="outline-text-3" id="text-自定义sigils-1">
+<pre class="example">
+defmodule MySigils do
+  #returns the downcasing string if option l is given then returns the list of downcase letters
+  def sigil_l(string,[]), do: String.Casing.downcase(string)
+  def sigil_l(string,[?l]), do: String.Casing.downcase(string) |&gt; String.graphemes
+  #returns the upcasing string if option l is given then returns the list of downcase letters
+  def sigil_u(string,[]), do: String.Casing.upcase(string)
+  def sigil_u(string,[?l]), do: String.Casing.upcase(string) |&gt; String.graphemes
+end
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org92ee413" class="outline-3">
+<h3 id="用法"><a id="org92ee413"></a><span class="section-number-3">4.2</span> 用法</h3>
+<div class="outline-text-3" id="text-用法">
+<pre class="example">
+iex&gt; import MySigils
+iex&gt; ~l/HELLO/
+"hello"
+iex&gt; ~l/HELLO/l
+["h", "e", "l", "l", "o"]
+iex&gt; ~u/hello/
+"HELLO"
+iex&gt; ~u/hello/l
+["H", "E", "L", "L", "O"]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org04d5305" class="outline-2">
+<h2 id="自定义错误"><a id="org04d5305"></a><span class="section-number-2">5</span> 5. 自定义错误</h2>
+<div class="outline-text-2" id="text-自定义错误">
+<pre class="example">
+defmodule BugError do
+   defexception message: "BUG BUG .." # message is the default
+end
+</pre>
+</div>
+
+<div id="outline-container-orgdbe6609" class="outline-3">
+<h3 id="用法-1"><a id="orgdbe6609"></a><span class="section-number-3">5.1</span> 用法</h3>
+<div class="outline-text-3" id="text-用法-1">
+<pre class="example">
+$ iex bug_error.ex
+iex&gt; raise BugError
+** (BugError) BUG BUG ..
+iex&gt; raise BugError, message: "I am Bug.."
+** (BugError) I am Bug..
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc55e15b" class="outline-2">
+<h2 id="从嵌套的map中取值"><a id="orgc55e15b"></a><span class="section-number-2">6</span> 6. 从嵌套的Map中取值</h2>
+<div class="outline-text-2" id="text-从嵌套的map中取值">
+<p>
+=get<sub>in</sub>=函数可以通过用键组成的列表在嵌套的Map结构中取出对应的值
+</p>
+
+<pre class="example">
+nested_map = %{ name: %{ first_name: "blackode"} }     # Example of Nested Map
+first_name = get_in(nested_map, [:name, :first_name])  # Retrieving the Key
+
+# Returns nil for missing value
+nil = get_in(nested, [:name, :last_name])              # returns nil when key is not present
+</pre>
+
+<p>
+参考文档：<a href="https://hexdocs.pm/elixir/Kernel.html#get_in/2">Kernel.get<sub>in</sub>/2</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3a42fb4" class="outline-2">
+<h2 id="with语句"><a id="org3a42fb4"></a><span class="section-number-2">7</span> 7. with语句</h2>
+<div class="outline-text-2" id="text-with语句">
+<p>
+特殊形式（special
+form）=with=用于按顺序进行一系列的模式匹配，如果所有子句匹配成功，则返回=do:=中的结果。
+但如果其中有子句无法成功匹配，则立即返回未匹配表达式的结果
+</p>
+
+<pre class="example">
+iex&gt; with 1 &lt;- 1+0,
+          2 &lt;- 1+1,
+          do: IO.puts "all matched"
+"all matched"
+iex&gt; with 1 &lt;- 1+0,
+          2 &lt;- 3+1,
+          do: IO.puts "all matched"
+4
+## since  2 &lt;- 3+1 is not matched so the result of 3+1 is returned.
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org8347678" class="outline-2">
+<h2 id="编写protocol"><a id="org8347678"></a><span class="section-number-2">8</span> 8. 编写Protocol</h2>
+<div class="outline-text-2" id="text-编写protocol">
+</div>
+
+<div id="outline-container-org1246ee9" class="outline-3">
+<h3 id="定义一个protocol"><a id="org1246ee9"></a><span class="section-number-3">8.1</span> 定义一个Protocol</h3>
+<div class="outline-text-3" id="text-定义一个protocol">
+<p>
+协议（Protocol）可以根据参数的类型将其向特定函数进行分派（dispatch）。
+在下面的例子中，宏=defprotocol=和=defimpl=用于定义不同类型的协议和协议实现。
+</p>
+
+<pre class="example">
+defprotocol Triple do
+  def triple(input)
+end
+
+defimpl Triple, for: Integer do
+  def triple(int) do
+    int * 3
+  end
+end
+
+defimpl Triple, for: List do
+  def triple(list) do
+    list ++ list ++ list
+  end
+end
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgdf7f36e" class="outline-3">
+<h3 id="用法-2"><a id="orgdf7f36e"></a><span class="section-number-3">8.2</span> 用法</h3>
+<div class="outline-text-3" id="text-用法-2">
+<p>
+在=iex=中加载代码并运行
+</p>
+
+<pre class="example">
+iex&gt; Triple.triple(3)
+9
+Triple.triple([1, 2])
+[1, 2, 1, 2,1,2]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8abe9c5" class="outline-2">
+<h2 id="三元操作符"><a id="org8abe9c5"></a><span class="section-number-2">9</span> 9. 三元操作符</h2>
+<div class="outline-text-2" id="text-三元操作符">
+<p>
+Elixir中并没有类似=true ? "yes" : "no"=这样的三元操作符，不过下面的写法一样可行
+</p>
+
+<pre class="example">
+"no" = if 1 == 0, do: "yes", else: "no"
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org96215af" class="outline-2">
+<h2 id="section"><a id="org96215af"></a><span class="section-number-2">10</span> 10. ????</h2>
+<div class="outline-text-2" id="text-section">
+<p>
+我故意没有第10个技巧，如果您恰巧有觉得不错的技巧，请在下面的评论中共享出来吧！
+</p>
+
+<p>
+如果您喜欢的话，请给原作者<a href="https://medium.com/blackode/10-killer-elixir-tips-2a9be1bec9be">点赞</a>
+吧
+</p>
+
+<p>
+未完待续&#x2026;
+</p>
+</div>
+</div>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2017-02-18</span>
+        <span title="last modification date" class="post-info">2019-01-18</span>
+        <span title="tags" class="post-info">N/A</span>
+        <span title="author" class="post-info">bigfang</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2017-02-18/【译】10个实用的elixir技巧";
+          var disqus_url = "http://bigfang.net/blog/2017-02-18/【译】10个实用的elixir技巧";
+          var disqus_shortname = 'bigfang';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-37180058-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:bitair &lt;at&gt; gmail &lt;dot&gt; com">bigfang</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,8 @@
+#+TITLE:       Hello Ruhoh!
+#+DATE:        2012-12-19
+#+KEYWORDS:    ruhoh
+#+TAGS:        :扯淡:blog:ruhoh:reST:折腾:
+#+LANGUAGE:    zh
+
+
+开始用ruhoh来搞blog，必须各种时髦啊。

@@ -1,0 +1,39 @@
+#+TITLE:       高逼格简历制作指北
+#+DATE:        2016-12-24 15:48:42
+#+KEYWORDS:    pandoc
+#+TAGS:        :折腾:工具:pandoc:
+#+LANGUAGE:    zh
+
+
+物以稀为贵，说的是越少的东西逼格越高，譬如本文标题用指北而不是指南，瞬间就高出了一格。简历也一样嘛，pdf的后缀名的总感觉比doc高贵那么几分，想来HR定然会高看一眼。
+所以，本指北将教给读者这样一种方法，只要简单写写，就可以生成漂亮的在线版的HTML简历和一模一样的pdf版本。
+
+***** 开始：
+      :PROPERTIES:
+      :CUSTOM_ID: 开始
+      :END:
+
+- 安装[[http://pandoc.org/][Pandoc]]和[[http://wkhtmltopdf.org/][wkhtmltopdf]]，[[http://pandoc.org/][Pandoc]]用来做格式转换，多说两句，这货可牛逼了，[[https://www.haskell.org/][Haskell]]写的杀手级应用，支持各种文档格式互转。[[http://wkhtmltopdf.org/][wkhtmltopdf]]作为pdf后端，看名字就知道是HTML转pdf用的
+- 简历写好，运行下面的命令，就能生成两种格式的简历了
+
+#+BEGIN_SRC sh
+  pandoc -s <简历文件> -o 简历.html
+  pandoc -s -t html5 <简历文件> -o 简历.pdf
+#+END_SRC
+
+***** 那么：
+      :PROPERTIES:
+      :CUSTOM_ID: 那么
+      :END:
+
+- 上面的两步生成的简历只有最简单的排版怎么办。网上找一个适配[[http://pandoc.org/][Pandoc]]的[[http://pandoc.org/demo/pandoc.css][CSS]]改改，命令里加上=-c pandoc.css=，排版和色彩就都解决了
+- 甚至可以在简历里生成流程图什么的，文档上有例子，一下子没看明白就不看了，反正放图还有其他方法
+
+***** 最后:
+      :PROPERTIES:
+      :CUSTOM_ID: 最后
+      :END:
+
+- 只能说[[http://pandoc.org/][Pandoc]]太牛逼，基本上输入什么格式都可以，当然作为一个连简历都要生成的懒人你一定会选择一个简单的格式。
+- 这其实不过是*用生成文档的方法来生成简历*罢了，以前用[[http://www.sphinx-doc.org/][Sphinx]]处理[[http://docutils.sourceforge.net/rst.html][reST]]格式的文本，对样式的操作很有限，生成pdf也要填很多坑。现在鸟枪换炮，[[http://pandoc.org/][Pandoc]]通吃一切
+- 简历最重要的还是内容，长得再漂亮也不过是一副臭皮囊，而已...

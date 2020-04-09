@@ -1,0 +1,23 @@
+#+TITLE:       偏爱问题
+#+DATE:        2011-05-07
+#+TAGS:        :扯淡:MovableType:毫无营养:
+#+LANGUAGE:    zh
+
+
+这段时间，一直都在折腾blog，从最初的godaddy免费空间，写reST生成html；
+到买了个hellohost的php共享空间，装wordpress玩；再到现在换到了支持perl的hostours，装了个movable
+type，
+总算比较满意了。hosthours真不错，68元的价格，还支持perl，ruby，实在是实惠，
+ssh速度也很快，空间小点也可以忍受，相比之下hellohost就太坑爹了，价格贵，各种慢，只支持php，
+而且只装了一个wordpress就显示我用了200多M空间!@#$%
+
+虽然wordpress大行其道，可是我怎么着都觉得movable type好。
+你看MT，用perl不用php，酷酷的，发布成html而不是动态网页，酷酷的；
+wp默认主题，丑死了，wp后台功能，弱爆了。MT多好，是吧^_^
+
+很早就发现自己会喜欢那些"万年老二"类的电子产品，比如喜欢AMD讨厌Intel（卖这么贵，讨厌死了），
+喜欢ATI甚于Nvidia（驱动太烂，现在喜欢不起来了- -）
+发展到现在，逐渐演化成了喜欢perl/ruby而不是python（那些$什么什么才好玩呢），
+喜欢Emacs而不是vim（╮(╯3╰)╭）
+
+这种偏爱还真是诡异呢。

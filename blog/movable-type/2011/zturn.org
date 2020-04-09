@@ -1,0 +1,7 @@
+#+TITLE:       折腾
+#+DATE:        2011-05-07
+#+TAGS:        :扯淡:MovableType:
+#+LANGUAGE:    zh
+
+
+这回用上了Movable Type来搭建这个站，hello world!

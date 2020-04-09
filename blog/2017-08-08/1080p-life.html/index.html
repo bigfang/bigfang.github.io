@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>过上了在线看1080p的幸福生活 - ╮(╯3╰)╭</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="bigfang" />
+    <meta name="description" content="1080p" />
+    <meta name="keywords" content="tips" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
+  </head>
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="/">╮(╯3╰)╭</a></h1>
+        <p>虽然不太明白，但是好厉害啊</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/bigfang">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="bigfang.net">
+        </form>
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>过上了在线看1080p的幸福生活</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#kcptun和bbr">1. kcptun和BBR</a></li>
+<li><a href="#kcptun对比bbr">2. kcptun对比BBR</a></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org94a5895" class="outline-2">
+<h2 id="kcptun和bbr"><a id="org94a5895"></a><span class="section-number-2">1</span> kcptun和BBR</h2>
+<div class="outline-text-2" id="text-kcptun和bbr">
+<p>
+心血来潮体验了一把kcptun，从此过上了在线看1080p无压力的幸福生活。
+</p>
+
+<p>
+然后又试了一把BBR，生活质量同样也达到了1080p。
+</p>
+
+<p>
+kcptun安装配置并不复杂，不过调参挺麻烦的；BBR需要内核版本&gt;=4.9，可以用=uname -r=查看，配置也还是蛮简单的：
+</p>
+
+<pre class="example">
+sudo modprobe tcp_bbr
+sudo sysctl net.core.default_qdisc=fq
+sudo sysctl net.ipv4.tcp_congestion_control=bbr
+</pre>
+
+<p>
+稍稍解释一下这些命令:
+</p>
+
+<p>
+=modprobe tcp<sub>bbr</sub>=载入名为tcp<sub>bbr的内核模块</sub>，可以使用命令=lsmod | grep bbr=来确认是否载入成功。
+</p>
+
+<p>
+=sysctl net.core.default<sub>qdisc</sub>=fq=用来配置队列规则(queuing
+discipline)算法为=fq=，=qdisc=的算法跟流量控制密切相关，目前默认的是=fq<sub>codel</sub>=，和=fq=的一个区别是没有实现一个名为=pacing=的特性，而BBR正好需要这个特性才能正常工作。如果开启了BBR而该选项依然用默认的=fq<sub>codel</sub>=，会导致丢包率增加。在未来的linux
+4.13中，=fq<sub>codel</sub>=也将支持=pacing=。也就是说4.13之后，这条命令就可以不用执行了。
+</p>
+
+<p>
+运行=sysctl net.ipv4.tcp<sub>available</sub><sub>congestion</sub><sub>control</sub>=可以查看可用的拥塞控制算法，用=sysctl net.ipv4.tcp<sub>congestion</sub><sub>control</sub>=bbr=选择使用BBR
+</p>
+
+<p>
+要注意的是，这些命令改变的是运行中的系统，也就是说重启之后这些配置就没有了。你会发现，=sysctl=命令后面跟着的那些长长的参数，跟=/proc/sys=目录有着神奇的对应关系，至于为什么，那就是另一个故事了。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org934ddee" class="outline-2">
+<h2 id="kcptun对比bbr"><a id="org934ddee"></a><span class="section-number-2">2</span> kcptun对比BBR</h2>
+<div class="outline-text-2" id="text-kcptun对比bbr">
+<ul class="org-ul">
+<li>kcptun是双端优化，需要安装一个客户端；BBR是单端优化，只需要服务端开启</li>
+<li>kcptun以带宽换网速，据说带宽消耗还是蛮可观的；BBR似乎不会特别消耗带宽</li>
+<li>kcptun若要达到最优效果，需要根据网络状况进行配置，配置项复杂又专业；BBR没啥配置，开启即可</li>
+<li>我个人感觉，kcptun比BBR稍微快了那么一点点</li>
+<li>两者同时使用，使我产生了生活质量又上升了一点点的错觉</li>
+</ul>
+</div>
+</div>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2017-08-08</span>
+        <span title="last modification date" class="post-info">2020-04-09</span>
+        <span title="tags" class="post-info"><a href="/tags/tips/">tips</a>, <a href="/tags/kcptun/">kcptun</a>, <a href="/tags/linux/">linux</a>, <a href="/tags/折腾/">折腾</a></span>
+        <span title="author" class="post-info">bigfang</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2017-08-08/1080p-life.html";
+          var disqus_url = "http://bigfang.net/blog/2017-08-08/1080p-life.html";
+          var disqus_shortname = 'bigfang';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-37180058-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:bitair &lt;at&gt; gmail &lt;dot&gt; com">bigfang</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

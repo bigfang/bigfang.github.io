@@ -4,216 +4,682 @@
     <title>╮(╯3╰)╭</title>
     <link>http://bigfang.net</link>
     <description>虽然不太明白，但是好厉害啊</description>
-    <pubDate>Tue, 21 May 2019 09:51:25 CST</pubDate>
-    <lastBuildDate>Tue, 21 May 2019 09:51:25 CST</lastBuildDate>
+    <pubDate>Thu, 09 Apr 2020 11:27:15 CST</pubDate>
+    <lastBuildDate>Thu, 09 Apr 2020 11:27:15 CST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
     <item>
-      <title>透过论坛看股市（1）:从发帖找热点</title>
-      <link>http://bigfang.net/blog/2018-01-27/analyze-jisilu-1</link>
-      <description><![CDATA[analyze jisilu]]></description>
-      <pubDate>2019-01-18</pubDate>
-      <guid>http://bigfang.net/blog/2018-01-27/analyze-jisilu-1</guid>
-    </item>
-    <item>
-      <title>透过论坛看股市（2.5）:透视表与热力图</title>
-      <link>http://bigfang.net/blog/2018-01-31/analyze-jisilu-2.5</link>
-      <description><![CDATA[analyze jisilu]]></description>
-      <pubDate>2019-01-18</pubDate>
-      <guid>http://bigfang.net/blog/2018-01-31/analyze-jisilu-2.5</guid>
-    </item>
-    <item>
-      <title>透过论坛看股市（2）:用户的地区和行业分布</title>
-      <link>http://bigfang.net/blog/2018-01-30/analyze-jisilu-2</link>
-      <description><![CDATA[analyze jisilu]]></description>
-      <pubDate>2019-01-18</pubDate>
-      <guid>http://bigfang.net/blog/2018-01-30/analyze-jisilu-2</guid>
-    </item>
-    <item>
-      <title>使用webpack取代brunch</title>
-      <link>http://bigfang.net/blog/2018-01-13/webpack-beat-brunch</link>
-      <description><![CDATA[webpack configure]]></description>
-      <pubDate>2019-01-18</pubDate>
-      <guid>http://bigfang.net/blog/2018-01-13/webpack-beat-brunch</guid>
-    </item>
-    <item>
-      <title>换到了org-page</title>
-      <link>http://bigfang.net/blog/2019-01-18/org-page</link>
-      <description><![CDATA[move to org-page]]></description>
-      <pubDate>2019-01-18</pubDate>
-      <guid>http://bigfang.net/blog/2019-01-18/org-page</guid>
-    </item>
-    <item>
-      <title>你要战，我便战！</title>
-      <link>http://bigfang.net/blog/2011-06-28/你要战，我便战！</link>
+      <title>五十音</title>
+      <link>http://bigfang.net/blog/2012-12-20/50-sound.html</link>
       <description><![CDATA[<div>
 <div class="post">
-<h1>你要战，我便战！</h1>
-<p>
-MT自带的TypePad
-AntiSpam和SpamLookup看来功能不够强大，偶尔还是有漏网之鱼，终于无法忍受每天手工删除spam了。
-昨晚上折腾了一个MT-Akismet装上去，有点小失望啊，配置超简单，会不会功能很弱啊。
-</p>
+<h1>五十音</h1>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
-<p>
-忽然很期待各种垃圾评论，很想试试效果怎么样。
-</p>
 
-<p>
-顺道又折腾了一下Google Analytics，其实早就想搞了就是懒得弄。
-MT这种用模板来配置网页的方式真不错，改起来也省事。
-只要在js的模板里加入Google Analytics的代码就可以了。
-另外再赞一下GoogleAnalytics这个插件，后台的页面漂亮了许多。
-</p>
+<colgroup>
+<col  class="org-left" />
 
-<p>
-最后又装了CKEdit想改善一下编辑器，不过不知何故，没有任何效果，坑爹哪。
-</p>
+<col  class="org-left" />
 
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">あ段</th>
+<th scope="col" class="org-left">い段</th>
+<th scope="col" class="org-left">う段</th>
+<th scope="col" class="org-left">え段</th>
+<th scope="col" class="org-left">お段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">あ行</td>
+<td class="org-left">あ</td>
+<td class="org-left">い</td>
+<td class="org-left">う</td>
+<td class="org-left">え</td>
+<td class="org-left">お</td>
+</tr>
+
+<tr>
+<td class="org-left">か行</td>
+<td class="org-left">か</td>
+<td class="org-left">き</td>
+<td class="org-left">く</td>
+<td class="org-left">け</td>
+<td class="org-left">こ</td>
+</tr>
+
+<tr>
+<td class="org-left">さ行</td>
+<td class="org-left">さ</td>
+<td class="org-left">し</td>
+<td class="org-left">す</td>
+<td class="org-left">せ</td>
+<td class="org-left">そ</td>
+</tr>
+
+<tr>
+<td class="org-left">た行</td>
+<td class="org-left">た</td>
+<td class="org-left">ち</td>
+<td class="org-left">つ</td>
+<td class="org-left">て</td>
+<td class="org-left">と</td>
+</tr>
+
+<tr>
+<td class="org-left">な行</td>
+<td class="org-left">な</td>
+<td class="org-left">に</td>
+<td class="org-left">ぬ</td>
+<td class="org-left">ね</td>
+<td class="org-left">の</td>
+</tr>
+
+<tr>
+<td class="org-left">は行</td>
+<td class="org-left">は</td>
+<td class="org-left">ひ</td>
+<td class="org-left">ふ</td>
+<td class="org-left">へ</td>
+<td class="org-left">ほ</td>
+</tr>
+
+<tr>
+<td class="org-left">ま行</td>
+<td class="org-left">ま</td>
+<td class="org-left">み</td>
+<td class="org-left">む</td>
+<td class="org-left">め</td>
+<td class="org-left">も</td>
+</tr>
+
+<tr>
+<td class="org-left">や行</td>
+<td class="org-left">や</td>
+<td class="org-left">（い）</td>
+<td class="org-left">ゆ</td>
+<td class="org-left">（え）</td>
+<td class="org-left">よ</td>
+</tr>
+
+<tr>
+<td class="org-left">ら行</td>
+<td class="org-left">ら</td>
+<td class="org-left">り</td>
+<td class="org-left">る</td>
+<td class="org-left">れ</td>
+<td class="org-left">ろ</td>
+</tr>
+
+<tr>
+<td class="org-left">わ行</td>
+<td class="org-left">わ</td>
+<td class="org-left">（い）</td>
+<td class="org-left">（う）</td>
+<td class="org-left">（え）</td>
+<td class="org-left">を</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>]]></description>
+      <pubDate>2020-04-09</pubDate>
+      <guid>http://bigfang.net/blog/2012-12-20/50-sound.html</guid>
+    </item>
+    <item>
+      <title>一个新玩具</title>
+      <link>http://bigfang.net/blog/2012-12-24/a-new-toy.html</link>
+      <description><![CDATA[<div>
+<div class="post">
+<h1>一个新玩具</h1>
 <p>
-发现GoogleAnalytics和CKEdit都是日本人写的，玩Emacs的时候也经常碰到出自日本人之手的插件。
-看起来他们很喜欢搞这些冷门的东西呢。
+<a href="https://gitlab.org/">GitLab</a>这个东西还蛮好的，正适合所谓“小团队"做项目管理。现在也开始提供代码托管服务了，今天小试了一下。<br />
+要说和GitHub有啥不一样，很明显，从URL上就能看出来，GitLab是以项目为中心，GitHub以人为中心。<br />
+好吧，我是瞎说的，没想明白的一点就是这种以项目为重的URL，fork了以后URL长啥样呐。其实我土鳖，连fork在哪里都没找到。<br />
+不过把那个pull request变成了merge
+request，明明本来就是合并请求嘛，说拉取很让人困扰的啦。
 </p>
 
 </div>
 </div>]]></description>
-      <pubDate>2019-01-18</pubDate>
-      <guid>http://bigfang.net/blog/2011-06-28/你要战，我便战！</guid>
+      <pubDate>2020-04-09</pubDate>
+      <guid>http://bigfang.net/blog/2012-12-24/a-new-toy.html</guid>
     </item>
     <item>
-      <title>头像哪儿去了</title>
-      <link>http://bigfang.net/blog/2011-05-14/头像哪儿去了</link>
+      <title>博客大换血</title>
+      <link>http://bigfang.net/blog/2012-12-20/blog-big-change-blood.html</link>
       <description><![CDATA[<div>
 <div class="post">
-<h1>头像哪儿去了</h1>
-<p>
-在安装blog的时候，MovableType就报告没有发现Image::Magick模块，作为一个不关心warning的家伙，也就得过且过了。
-后来发现用户头像始终是一个暗淡的小脑袋，上传头像也找不到地方，这实在是让人不爽，终于在昨晚上腾出手来把这问题给解决了。
-</p>
-
-<p>
-最直接的方法就是把这个缺掉的模块装上好了，在cpan上折腾了好久都没成功，才注意到Image::Magick是依赖ImageMagick的，
-这台主机本身没有安装，只得自己编译了。
-编译过程中，一度发现空间占用达到了252M-_-|||，安装清理完了之后依然有50多M，就算再干掉25M文档，还是很大呀，果然处理图像的都是大家伙么。
-都这样搞，我这小小的300M空间怎么吃得消。
-</p>
-
-<p>
-网上搜了艘，发现可以配置mt-config.cgi文件里的ImageDriver来改变MT使用的图像工具，
-ImageMagick只不过是这个配置的缺省值而已，还有NetPBM，GD和Imager（MT5.1）可供选择。
-原来根本不用这么复杂，直接改配置就好╯﹏╰，加入一行ImageDriver
-GD，头像就可以上传并显示了（当然，主机上得安装了那个GD模块先）。
-果然官方文档才是王道。
-</p>
-
-<p>
-mt-config.cgi是MT的配置文件，会存放数据库的用户名密码啥的，应该很重要才是，可是网上好多文章说要把权限设成755甚至777，很不解。
-我是只给了400，目前也没出什么问题，这种文件还是权限小点比较安心。
-</p>
-
-<p>
-忙了一个晚上，终于还是搞好了，挑了一张萌图做头像，blog主页会不会显示头像了呢，满怀憧憬的刷新，咦，没变呀。
-是不是没有重新发布的原因呢？publish，刷新，太坑爹了，依然什么变化都没有，掀桌！睡觉去&#x2026;&#x2026;
-</p>
-
-<p>
-这就是那两个小萌物<br />
-<img src="file:///assets/media/img/little-white-two.jpg" alt="little-white-two.jpg" />
-</p>
-
-</div>
-</div>]]></description>
-      <pubDate>2019-01-18</pubDate>
-      <guid>http://bigfang.net/blog/2011-05-14/头像哪儿去了</guid>
-    </item>
-    <item>
-      <title>圆满</title>
-      <link>http://bigfang.net/blog/2012-08-17/圆满</link>
-      <description><![CDATA[<div>
-<div class="post">
-<h1>圆满</h1>
-<p>
-周日，占星家宣布，本周是幸运之周，所有2货产量加倍。
-</p>
-
-<p>
-今日总结：本周及其诡异，2过，被2过，总之2比2平了，有种人生圆满了的感觉。<br />
-最近不是很忙，不过要做的事情还是不少的，学习的兴致又上来了，可以看看书了。<br />
-3年断断续续的纸上谈兵的看lisp，最近终于找到点感觉，似乎有点懵懂了，可喜可贺。列下要看的书吧。
-</p>
-
-<ul class="org-ul">
-<li>SICP再看一遍前三章。</li>
-<li>Clojure的语法学起来，顺便找个hello
-world练练手。话说clojure还真是不错。</li>
-<li>实用Common Lisp编程看起来。</li>
-<li>有空还是要复习下ruby元编程，感觉对我写python也是大有帮助的。</li>
+<h1>博客大换血</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#颜控">1. 颜控</a></li>
+<li><a href="#黑历史">2. 黑历史</a></li>
+<li><a href="#to-do">3. TO-DO</a></li>
+<li><a href="#成果汇报">4. 成果汇报</a></li>
 </ul>
+</div>
+</div>
+
+
+<div id="outline-container-org99f53c0" class="outline-2">
+<h2 id="颜控"><a id="org99f53c0"></a><span class="section-number-2">1</span> 颜控</h2>
+<div class="outline-text-2" id="text-颜控">
+<p>
+N久以前就想要换成ruhoh，昨天终于行动起来了。
+主要是因为发现了<a href="http://jekyllbootstrap.com/">jekyll
+bootstrap</a>上我心仪的主题<a href="http://themes.jekyllbootstrap.com/preview/hooligan/">hooligan</a>已经可以用在ruhoh上了。<br />
+其实很久以前就放到了ruhoh的<a href="https://github.com/ruhoh/hooligan">github</a>上了，没发现而已。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0fefe41" class="outline-2">
+<h2 id="黑历史"><a id="org0fefe41"></a><span class="section-number-2">2</span> 黑历史</h2>
+<div class="outline-text-2" id="text-黑历史">
+<p>
+说话最早的时候用过<a href="http://docutils.sourceforge.net/rst.html">reStructuredText</a>来做小站，从此喜欢上了生成静态页面的方式，
+后来折腾了一段时间的wordpress和Movable Type，<br />
+虽然那时MT已经没落，但他源码是perl，文章需编译成静态文件，这两点很得我欢心，<br />
+于是在某种奇怪审美的引导下，最终投入了Movable Type的怀抱。<br />
+再后来github推出pages，各路基于git和模板的blog系统纷纷出炉，也曾有过从MT转移到其他系统的想法，<br />
+不过身为一个合格的*颜控*，<a href="http://octopress.org/">Octopress</a>那丑爆了的默认界面立马打消了我的这个念头。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org50ba5e4" class="outline-2">
+<h2 id="to-do"><a id="org50ba5e4"></a><span class="section-number-2">3</span> TO-DO</h2>
+<div class="outline-text-2" id="text-to-do">
+<ul class="org-ul">
+<li>修改主题为hooligan</li>
+<li>设置好评论</li>
+<li>增加google analytics</li>
+<li>研究主题，继续美化，英文字体各种美，中文字体不咋滴啊</li>
+<li>把以前的老博客搬过来</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3f16923" class="outline-2">
+<h2 id="成果汇报"><a id="org3f16923"></a><span class="section-number-2">4</span> 成果汇报</h2>
+<div class="outline-text-2" id="text-成果汇报">
+<ul class="org-ul">
+<li>文件托管在ruhoh，访问好慢啊T<sub>T</sub></li>
+<li>省钱，不用买空间</li>
+<li>接触了git submodule</li>
+<li>再次熟悉markdown写法</li>
+<li>git使用更熟练</li>
+<li>妈妈再也不用担心我的学习</li>
+</ul>
+</div>
+</div>
 
 </div>
 </div>]]></description>
-      <pubDate>2019-01-18</pubDate>
-      <guid>http://bigfang.net/blog/2012-08-17/圆满</guid>
+      <pubDate>2020-04-09</pubDate>
+      <guid>http://bigfang.net/blog/2012-12-20/blog-big-change-blood.html</guid>
     </item>
     <item>
-      <title>又动杀心了</title>
-      <link>http://bigfang.net/blog/2012-06-13/又动杀心了</link>
+      <title>Hello Ruhoh!</title>
+      <link>http://bigfang.net/blog/2012-12-19/hello-ruhoh.html</link>
       <description><![CDATA[<div>
 <div class="post">
-<h1>又动杀心了</h1>
+<h1>Hello Ruhoh!</h1>
 <p>
-这几天又看到一个静态blog生成器ruhoh，Mustache当模版，Markdown写文章，git做管理，还宣称以后会支持部署在github和heroku上（不过目前一样可以部署，大概就稍微麻烦一点）
-更主要的是它的网站比那啥octppress好看的多得多！不能不让人动心啊。<br />
-现在是alpha版，win下面折腾还有点问题，还是很期待正式版的。
-</p>
-
-<p>
-看来现在这个blog又命不久矣╮(╯3╰)╭。
+开始用ruhoh来搞blog，必须各种时髦啊。
 </p>
 
 </div>
 </div>]]></description>
-      <pubDate>2019-01-18</pubDate>
-      <guid>http://bigfang.net/blog/2012-06-13/又动杀心了</guid>
+      <pubDate>2020-04-09</pubDate>
+      <guid>http://bigfang.net/blog/2012-12-19/hello-ruhoh.html</guid>
     </item>
     <item>
-      <title>頑張ります</title>
-      <link>http://bigfang.net/blog/2011-11-29/頑張ります</link>
+      <title>可怕的事情</title>
+      <link>http://bigfang.net/blog/2012-12-26/horrible-things.html</link>
       <description><![CDATA[<div>
 <div class="post">
-<h1>頑張ります</h1>
+<h1>可怕的事情</h1>
 <p>
-重装系统是会上瘾的吧，每年发作一次。
+根据以往的经验，如果我花费大量精力来折腾自己的玩具的时候，往往预示着要发生什么了。<br />
+就像发改委一样。<br />
+这两天也折腾的够呛，恐怕是有什么可怕的事情要发生了。
 </p>
 
 <p>
-上回装了win7和arch的双系统，结果也没用几次arch，白白闲了这么多硬盘空间。
-这回于是就学聪明了，果断的只装了一个系统--&#x2013;&#x2014;Arch。
-</p>
-
-<p>
-自打出了webqq，拿linux做桌面就没什么障碍了，新出的Q+也很给力。
-arch的安装很快，这次果断的选择了xfce4，而没有脑残的花时间折腾窗口管理器，而且有之前留下来的配置，很迅速的搞定一切，
-兴致勃勃的打开捕鱼乐园，才玩了一小会，哔ーー的一下就关机了。
-</p>
-
-<p>
-开始以为是flash的毛病，后来用rvm编译ruby的时候又发生了一次，估计是显卡驱动的问题了，
-悲催的ATI。这看视频估计也是要悲剧的。明明以前没有这个问题呐T<sub>T</sub>
-</p>
-
-<p>
-很明智的没有搞什么代码高亮插件，不然这个blog非得变成没有技术含量的技术博不可。
-每天上班下班都搞这些也很乏味。说要学日语，到现在50音还没记住，真是太废了。
-买来的《新编日语》连翻都没翻。看来我至少拥有了三大美德之首(╯3╰)。
-虽说觉得日语很萌，可从我嘴巴里出来的，就是猥琐大叔的调调，
-这难道就是理想与现实的差距吗╮(╯_╰)╭。不管多么难听，还是要頑張的，哈哈。
+未来的有趣之处就在于它的不确定性，拭目以待！
 </p>
 
 </div>
 </div>]]></description>
-      <pubDate>2019-01-18</pubDate>
-      <guid>http://bigfang.net/blog/2011-11-29/頑張ります</guid>
+      <pubDate>2020-04-09</pubDate>
+      <guid>http://bigfang.net/blog/2012-12-26/horrible-things.html</guid>
+    </item>
+    <item>
+      <title>为啥这么闲</title>
+      <link>http://bigfang.net/blog/2012-12-21/why-so-idle.html</link>
+      <description><![CDATA[<div>
+<div class="post">
+<h1>为啥这么闲</h1>
+<p>
+因为要等代码运行完，所以有时间啊。
+</p>
+
+<p>
+昨晚上开始，略略折腾出了点门道，在人家专业美工的建议下，修改了些细节，好看了一点。
+增加了渣浪微博和RSS按钮，搞好了favicon。<br />
+发现了<a href="http://zocial.smcllns.com/sample.html">zocial</a>，发现了浏览器和google
+reader自动识别RSS的秘密。 丧心病狂的加了N个tag。
+</p>
+
+<p>
+数据库里有数据，下班。
+</p>
+
+</div>
+</div>]]></description>
+      <pubDate>2020-04-09</pubDate>
+      <guid>http://bigfang.net/blog/2012-12-21/why-so-idle.html</guid>
+    </item>
+    <item>
+      <title>找到原因了！</title>
+      <link>http://bigfang.net/blog/2013-03-15/find-why.html</link>
+      <description><![CDATA[<div>
+<div class="post">
+<h1>找到原因了！</h1>
+<p>
+我现在所做的工作根本不能为人类的解放做出哪怕那么一丁点儿的贡献。
+这正是我悔恨加羞耻的的原因啊！！！
+</p>
+
+</div>
+</div>]]></description>
+      <pubDate>2020-04-09</pubDate>
+      <guid>http://bigfang.net/blog/2013-03-15/find-why.html</guid>
+    </item>
+    <item>
+      <title>Hello Hexo</title>
+      <link>http://bigfang.net/blog/2013-04-08/hello-hexo.html</link>
+      <description><![CDATA[<div>
+<div class="post">
+<h1>Hello Hexo</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#todo">1. <span class="todo TODO">TODO</span> </a></li>
+<li><a href="#吐个槽">2. 吐个槽</a></li>
+</ul>
+</div>
+</div>
+<p>
+Ruhoh升级服务，新写blog居然出问题，这种小网站果然不靠谱，还是用GitHub放心。于是换到基于node.js的<a href="http://zespia.tw/hexo">hexo</a>，作者貌似是台湾人，默认还是小清新主题，感觉相当不错。
+</p>
+
+<div id="outline-container-orgec95487" class="outline-2">
+<h2 id="todo"><a id="orgec95487"></a><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> </h2>
+<div class="outline-text-2" id="text-todo">
+<ul class="org-ul">
+<li>搞定rss插件</li>
+<li>修复图片路径</li>
+<li>修复favicon</li>
+<li>Disuqs换成亮色主题</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org1342203" class="outline-2">
+<h2 id="吐个槽"><a id="org1342203"></a><span class="section-number-2">2</span> 吐个槽</h2>
+<div class="outline-text-2" id="text-吐个槽">
+<p>
+markdown还是有点儿反人类，换行居然需要在末尾敲2个空格，用看不见的字符控制格式这得多蛋疼。
+</p>
+</div>
+</div>
+
+</div>
+</div>]]></description>
+      <pubDate>2020-04-09</pubDate>
+      <guid>http://bigfang.net/blog/2013-04-08/hello-hexo.html</guid>
+    </item>
+    <item>
+      <title>日文假名的汉字来源</title>
+      <link>http://bigfang.net/blog/2015-02-25/kana-vs-hanja.html</link>
+      <description><![CDATA[<div>
+<div class="post">
+<h1>日文假名的汉字来源</h1>
+<p>
+再一次心血来潮了
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">安 → <b>あ</b></td>
+<td class="org-left">阿 → *ア*（阿の左側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">以 → <b>い</b></td>
+<td class="org-left">伊 → *イ*（伊の左側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">宇 → <b>う</b></td>
+<td class="org-left">宇 → *ウ*（宇の上の部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">衣 → <b>え</b></td>
+<td class="org-left">江 → *エ*（江の右側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">於 → <b>お</b></td>
+<td class="org-left">於 → *オ*（於の左側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">---------------</td>
+<td class="org-left">-----------------</td>
+</tr>
+
+<tr>
+<td class="org-left">加 → <b>か</b></td>
+<td class="org-left">加 → *カ*（加の左側部分)</td>
+</tr>
+
+<tr>
+<td class="org-left">幾 → <b>き</b></td>
+<td class="org-left">幾 → <b>キ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">久 → <b>く</b></td>
+<td class="org-left">久 → **ク（**久の左側部分)</td>
+</tr>
+
+<tr>
+<td class="org-left">計 → <b>け</b></td>
+<td class="org-left">介 → <b>ケ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">己 → <b>こ</b></td>
+<td class="org-left">己 → *コ*（己の上の部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">---------------</td>
+<td class="org-left">-----------------</td>
+</tr>
+
+<tr>
+<td class="org-left">左 → <b>さ</b></td>
+<td class="org-left">散 → *サ*（散の左上部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">之 → <b>し</b></td>
+<td class="org-left">之 → <b>シ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">寸 → <b>す</b></td>
+<td class="org-left">須 → *ス*（須の右側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">世 → <b>せ</b></td>
+<td class="org-left">世 → <b>セ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">曽 → <b>そ</b></td>
+<td class="org-left">曽 → *ソ*（曽の上の部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">---------------</td>
+<td class="org-left">-----------------</td>
+</tr>
+
+<tr>
+<td class="org-left">太 → <b>た</b></td>
+<td class="org-left">多 → *タ*（多の上の部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">知 → <b>ち</b></td>
+<td class="org-left">千 → <b>チ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">川 → <b>つ</b></td>
+<td class="org-left">川 → <b>ツ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">天 → <b>て</b></td>
+<td class="org-left">天 → <b>テ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">止 → <b>と</b></td>
+<td class="org-left">止 → *ト*（止の右上部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">---------------</td>
+<td class="org-left">-----------------</td>
+</tr>
+
+<tr>
+<td class="org-left">奈 → <b>な</b></td>
+<td class="org-left">奈 → *ナ*（奈の左上部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">仁 → <b>に</b></td>
+<td class="org-left">二 → <b>ニ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">奴 → <b>ぬ</b></td>
+<td class="org-left">奴 → *ヌ*（奴の右側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">祢 → <b>ね</b></td>
+<td class="org-left">祢 → *ネ*（祢の左側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">乃 → <b>の</b></td>
+<td class="org-left">乃 → *ノ*（乃の左側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">---------------</td>
+<td class="org-left">-----------------</td>
+</tr>
+
+<tr>
+<td class="org-left">波 → <b>は</b></td>
+<td class="org-left">八 → <b>ハ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">比 → <b>ひ</b></td>
+<td class="org-left">比 → *ヒ*（比の右側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">不 → <b>ふ</b></td>
+<td class="org-left">不 → *フ*（不の左上部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">部 → <b>へ</b></td>
+<td class="org-left">部 → *ヘ*（部の右側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">保 → <b>ほ</b></td>
+<td class="org-left">保 → *ホ*（保の右下部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">---------------</td>
+<td class="org-left">-----------------</td>
+</tr>
+
+<tr>
+<td class="org-left">末 → <b>ま</b></td>
+<td class="org-left">末 → <b>マ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">美 → <b>み</b></td>
+<td class="org-left">三 → <b>ミ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">武 → <b>む</b></td>
+<td class="org-left">牟 → *ム*（牟の上の部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">女 → <b>め</b></td>
+<td class="org-left">女 → *メ*（女の下の部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">毛 → <b>も</b></td>
+<td class="org-left">毛 → <b>モ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">---------------</td>
+<td class="org-left">-----------------</td>
+</tr>
+
+<tr>
+<td class="org-left">也 → <b>や</b></td>
+<td class="org-left">也 → <b>ヤ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">由 → <b>ゆ</b></td>
+<td class="org-left">由 → *ユ*（由の右側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">与 → <b>よ</b></td>
+<td class="org-left">与 → <b>ヨ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">---------------</td>
+<td class="org-left">-----------------</td>
+</tr>
+
+<tr>
+<td class="org-left">良 → <b>ら</b></td>
+<td class="org-left">良 → *ラ*（良の右上部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">利 → <b>り</b></td>
+<td class="org-left">利 → **リ（**利の右側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">留 → <b>る</b></td>
+<td class="org-left">流 → *ル*（流の右下部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">礼 → <b>れ</b></td>
+<td class="org-left">礼 → *レ*（礼の右側部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">呂 → <b>ろ</b></td>
+<td class="org-left">呂 → *ロ*（呂の上の部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">---------------</td>
+<td class="org-left">-----------------</td>
+</tr>
+
+<tr>
+<td class="org-left">和 → <b>わ</b></td>
+<td class="org-left">和 → *ワ*（和の右上部分）</td>
+</tr>
+
+<tr>
+<td class="org-left">遠 → <b>を</b></td>
+<td class="org-left">乎 → <b>ヲ</b></td>
+</tr>
+
+<tr>
+<td class="org-left">无 → <b>ん</b></td>
+<td class="org-left">尓 → <b>ン</b></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>]]></description>
+      <pubDate>2020-04-09</pubDate>
+      <guid>http://bigfang.net/blog/2015-02-25/kana-vs-hanja.html</guid>
+    </item>
+    <item>
+      <title>嘴巴做操</title>
+      <link>http://bigfang.net/blog/2015-02-26/mouth-cao.html</link>
+      <description><![CDATA[<div>
+<div class="post">
+<h1>嘴巴做操</h1>
+<p>
+跟着B站上的<a href="http://www.bilibili.com/video/av1111459">视频教程</a>看，居然记住了あかさ三行的平假名，效果显著啊。
+</p>
+
+<p>
+下图来自<a href="http://bulo.hujiang.com/diary/162179/">这里</a>
+</p>
+
+<p>
+<img src="file:///assets/kxc1.jpg" alt="kxc1.jpg" /> <img src="file:///assets/kxc2.jpg" alt="kxc2.jpg" /> <img src="file:///assets/kxc3.jpg" alt="kxc3.jpg" /> <img src="file:///assets/kxc4.jpg" alt="kxc4.jpg" />
+</p>
+
+</div>
+</div>]]></description>
+      <pubDate>2020-04-09</pubDate>
+      <guid>http://bigfang.net/blog/2015-02-26/mouth-cao.html</guid>
     </item>
   </channel>
 </rss>

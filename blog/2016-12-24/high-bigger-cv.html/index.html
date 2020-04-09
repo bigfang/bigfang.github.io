@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>高逼格简历制作指北 - ╮(╯3╰)╭</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="bigfang" />
+    <meta name="keywords" content="pandoc" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
+  </head>
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="/">╮(╯3╰)╭</a></h1>
+        <p>虽然不太明白，但是好厉害啊</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/bigfang">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="bigfang.net">
+        </form>
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>高逼格简历制作指北</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#开始">1. 开始：</a></li>
+<li><a href="#那么">2. 那么：</a></li>
+<li><a href="#最后">3. 最后:</a></li>
+</ul>
+</div>
+</div>
+<p>
+物以稀为贵，说的是越少的东西逼格越高，譬如本文标题用指北而不是指南，瞬间就高出了一格。简历也一样嘛，pdf的后缀名的总感觉比doc高贵那么几分，想来HR定然会高看一眼。
+所以，本指北将教给读者这样一种方法，只要简单写写，就可以生成漂亮的在线版的HTML简历和一模一样的pdf版本。
+</p>
+
+<div id="outline-container-org2e4bdf8" class="outline-2">
+<h2 id="开始"><a id="org2e4bdf8"></a><span class="section-number-2">1</span> 开始：</h2>
+<div class="outline-text-2" id="text-开始">
+<ul class="org-ul">
+<li>安装<a href="http://pandoc.org/">Pandoc</a>和<a href="http://wkhtmltopdf.org/">wkhtmltopdf</a>，<a href="http://pandoc.org/">Pandoc</a>用来做格式转换，多说两句，这货可牛逼了，<a href="https://www.haskell.org/">Haskell</a>写的杀手级应用，支持各种文档格式互转。<a href="http://wkhtmltopdf.org/">wkhtmltopdf</a>作为pdf后端，看名字就知道是HTML转pdf用的</li>
+<li>简历写好，运行下面的命令，就能生成两种格式的简历了</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-sh">pandoc -s &lt;简历文件&gt; -o 简历.html
+pandoc -s -t html5 &lt;简历文件&gt; -o 简历.pdf
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7393670" class="outline-2">
+<h2 id="那么"><a id="org7393670"></a><span class="section-number-2">2</span> 那么：</h2>
+<div class="outline-text-2" id="text-那么">
+<ul class="org-ul">
+<li>上面的两步生成的简历只有最简单的排版怎么办。网上找一个适配<a href="http://pandoc.org/">Pandoc</a>的<a href="http://pandoc.org/demo/pandoc.css">CSS</a>改改，命令里加上=-c pandoc.css=，排版和色彩就都解决了</li>
+<li>甚至可以在简历里生成流程图什么的，文档上有例子，一下子没看明白就不看了，反正放图还有其他方法</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9066fa0" class="outline-2">
+<h2 id="最后"><a id="org9066fa0"></a><span class="section-number-2">3</span> 最后:</h2>
+<div class="outline-text-2" id="text-最后">
+<ul class="org-ul">
+<li>只能说<a href="http://pandoc.org/">Pandoc</a>太牛逼，基本上输入什么格式都可以，当然作为一个连简历都要生成的懒人你一定会选择一个简单的格式。</li>
+<li>这其实不过是*用生成文档的方法来生成简历*罢了，以前用<a href="http://www.sphinx-doc.org/">Sphinx</a>处理<a href="http://docutils.sourceforge.net/rst.html">reST</a>格式的文本，对样式的操作很有限，生成pdf也要填很多坑。现在鸟枪换炮，<a href="http://pandoc.org/">Pandoc</a>通吃一切</li>
+<li>简历最重要的还是内容，长得再漂亮也不过是一副臭皮囊，而已&#x2026;</li>
+</ul>
+</div>
+</div>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2016-12-24</span>
+        <span title="last modification date" class="post-info">2020-04-09</span>
+        <span title="tags" class="post-info"><a href="/tags/折腾/">折腾</a>, <a href="/tags/工具/">工具</a>, <a href="/tags/pandoc/">pandoc</a></span>
+        <span title="author" class="post-info">bigfang</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2016-12-24/high-bigger-cv.html";
+          var disqus_url = "http://bigfang.net/blog/2016-12-24/high-bigger-cv.html";
+          var disqus_shortname = 'bigfang';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-37180058-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:bitair &lt;at&gt; gmail &lt;dot&gt; com">bigfang</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

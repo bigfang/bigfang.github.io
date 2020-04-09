@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>Elixir中被移除的模块 - ╮(╯3╰)╭</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="bigfang" />
+    <meta name="description" content="elixir deprecations" />
+    <meta name="keywords" content="elixir" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
+  </head>
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="/">╮(╯3╰)╭</a></h1>
+        <p>虽然不太明白，但是好厉害啊</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/bigfang">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="bigfang.net">
+        </form>
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>Elixir中被移除的模块</h1>
+<p>
+最近一段时间为了学习Elixir，不停的在翻阅中英文的书籍、文章和博客。确实学到不少，不过也有些东西确实让我迷惑了一阵子，比如《Elixir程序设计》一书的第8章，着实吓了我一跳，「字典：散列表、散列字典、关键字列表、集合与结构体」，这么多的数据结构，看起来都差不多，一讲到关键部分，书里说的就不甚明了，隔靴搔痒。更诡异的是，还有一些教程，压根就没提到散列字典，还有的文章，甚至出现了=MapSet=这种东西。
+</p>
+
+<p>
+怎么回事呢。
+</p>
+
+<p>
+作为一门年轻的语言，Elixir在不停的进化，随着版本升级，语言特性也在不断的更新。所以，包括《Elixir程序设计》在内的很多译作与文章,已经落后于语言的发展了。这再一次的说明了，关注<a href="https://github.com/elixir-lang/elixir/releases"><code>CHANGELOG</code></a>是多么的重要&#x2026;
+</p>
+
+<p>
+目前Elixir的版本是1.4.2，整理一下目前我关注到的一些被移除的模块
+</p>
+
+<ul class="org-ul">
+<li>=Behaviour=：无疑是一个重量级的移除，使用更优雅的模块属性=@callback=和=@macrocallback=来代替之前的写法，这个新特性自=1.4.0=开始。</li>
+
+<li>=Dict=：在被移除之前，=Dict=似乎是实现了某种=Behaviour=，既可以操作=keyword list=，也可以操作=Map=，这个模块确实让人摸不着头脑，所以它在=1.3.0=开始被抛弃了。</li>
+
+<li>=HashDict=：文档上说用=Map=来代替它，为啥会这样我也不是很懂，不过，<a href="https://gist.github.com/BinaryMuse/bb9f2cbf692e6cfa4841">这个</a>性能测试也许能说明点什么</li>
+
+<li>=Set=与=HashSet=：从=1.2.0=开始，就被“软性移除”（使用它不会报warnning）了，=Set=模块在=1.4.0=时被正式放弃。文档里建议使用=MapSet=来代替它们。</li>
+</ul>
+
+<p>
+总结一下，目前Elixir中的几种常用数据结构和操作它们的模块如下：
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">数据结构</th>
+<th scope="col" class="org-left">操作模块</th>
+<th scope="col" class="org-left">被移除的模块</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Tuple</td>
+<td class="org-left"><a href="https://hexdocs.pm/elixir/Tuple.html">Tuple</a></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Keyword list</td>
+<td class="org-left"><a href="https://hexdocs.pm/elixir/Keyword.html">Keyword</a></td>
+<td class="org-left"><code>Dict</code></td>
+</tr>
+
+<tr>
+<td class="org-left">(Linked) List</td>
+<td class="org-left"><a href="https://hexdocs.pm/elixir/List.html">List</a></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Map</td>
+<td class="org-left"><a href="https://hexdocs.pm/elixir/Map.html">Map</a></td>
+<td class="org-left"><code>Dict</code>, <code>HashDict</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Set</td>
+<td class="org-left"><a href="https://hexdocs.pm/elixir/MapSet.html">MapSet</a></td>
+<td class="org-left"><code>Set</code>, <code>HashSet</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+需要注意的是，并不是只有上表中列出来模块才能操作对应的数据结构，比如=Enum=模块能够同时操作=Keyword list=、=List=、=Map=。原因是这三种数据结构都实现了<a href="https://hexdocs.pm/elixir/Enumerable.html">Enumerable</a>=协议（protocol）=，而=Enum=模块可以对所有实现了该协议的类型进行操作。=协议=是Elixir实现=多态=的手段，感觉和=Clojure=中同名的=协议=非常接近，也类似于Java中的=Interface=。
+</p>
+
+<p>
+除了移除模块，Elixir还加入了一些新的特性，我目前知道的用起来比较爽的有：
+</p>
+
+<ul class="org-ul">
+<li><p>
+=with&#x2026;else=语句，这种写法可以大大减少代码量，下面是官方文档中在=with=语句中使用=Guard=的例子，
+</p>
+
+<pre class="example">
+iex&gt; users = %{"melany" =&gt; "guest", "bob" =&gt; :admin}
+iex&gt; with {:ok, role} when not is_binary(role) &lt;- Map.fetch(users, "bob"),
+...&gt;      do: {:ok, to_string(role)}
+{:ok, "admin"}
+</pre></li>
+
+<li><p>
+=ExUnit.Case=里增加了=describe/2=宏，可以理解成把test
+case分组，使单元测试的代码可以更便于阅读。下面同样是官方文档中的例子：
+</p>
+
+<pre class="example">
+defmodule UserManagementTest do
+  use ExUnit.Case, async: true
+
+  describe "when user is logged in and is an admin" do
+    setup [:log_user_in, :set_type_to_admin]
+
+    test ...
+  end
+
+  describe "when user is logged in and is a manager" do
+    setup [:log_user_in, :set_type_to_manager]
+
+    test ...
+  end
+
+  defp log_user_in(context) do
+    # ...
+  end
+end
+</pre>
+
+<p>
+被=describe=包裹的代码块可以单独运行测试，像这样：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">mix test --only describe:"when user is logged in and is an admin"
+</pre>
+</div></li>
+</ul>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2017-03-08</span>
+        <span title="last modification date" class="post-info">2020-04-09</span>
+        <span title="tags" class="post-info"><a href="/tags/elixir/">elixir</a></span>
+        <span title="author" class="post-info">bigfang</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2017-03-08/deprecated-elixir-module.html";
+          var disqus_url = "http://bigfang.net/blog/2017-03-08/deprecated-elixir-module.html";
+          var disqus_shortname = 'bigfang';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-37180058-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:bitair &lt;at&gt; gmail &lt;dot&gt; com">bigfang</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

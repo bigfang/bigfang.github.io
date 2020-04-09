@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>【译】Erlang/Elixir语法速成 - ╮(╯3╰)╭</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="bigfang" />
+    <meta name="keywords" content="elixir, erlang" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
+  </head>
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="/">╮(╯3╰)╭</a></h1>
+        <p>虽然不太明白，但是好厉害啊</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/bigfang">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="bigfang.net">
+        </form>
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>【译】Erlang/Elixir语法速成</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#原文erlangelixir-syntax-a-crash-course">原文：Erlang/ElixirSyntax: A Crash Course</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#erlangelixir语法速成">Erlang/Elixir语法速成</a>
+<ul>
+<li><a href="#1-运行代码">1 运行代码</a>
+<ul>
+<li><a href="#11-erlang">1.1 Erlang</a></li>
+<li><a href="#12-elixir">1.2 Elixir</a></li>
+</ul>
+</li>
+<li><a href="#2-显著差异">2 显著差异</a>
+<ul>
+<li><a href="#21-操作符名称">2.1 操作符名称</a></li>
+<li><a href="#22-分隔符">2.2 分隔符</a></li>
+<li><a href="#23-变量名">2.3 变量名</a></li>
+<li><a href="#24-函数调用">2.4 函数调用</a></li>
+</ul>
+</li>
+<li><a href="#3-数据类型">3 数据类型</a>
+<ul>
+<li><a href="#31-原子">3.1 原子</a></li>
+<li><a href="#32-元组">3.2 元组</a></li>
+<li><a href="#33-列表与二进制串">3.3 列表与二进制串</a></li>
+<li><a href="#34-关键字列表keyword-list">3.4 关键字列表（Keyword list）</a></li>
+<li><a href="#35-映射（Map）">3.5 映射（Map）</a></li>
+<li><a href="#36-正则表达式">3.6 正则表达式</a></li>
+</ul>
+</li>
+<li><a href="#4-模块">4 模块</a></li>
+<li><a href="#5-函数语法">5 函数语法</a>
+<ul>
+<li><a href="#51-模式匹配">5.1 模式匹配</a></li>
+<li><a href="#52-函数识别">5.2 函数识别</a></li>
+<li><a href="#53-默认值">5.3 默认值</a></li>
+<li><a href="#54-匿名函数">5.4 匿名函数</a></li>
+<li><a href="#55-作为一等公民first-class的函数">5.5 作为一等公民（first-class）的函数</a></li>
+<li><a href="#56-elixir中的局部应用与函数捕捉">5.6 Elixir中的局部应用与函数捕捉</a></li>
+</ul>
+</li>
+<li><a href="#6-流程控制">6. 流程控制</a>
+<ul>
+<li><a href="#61-case">6.1 Case</a></li>
+<li><a href="#62-if">6.2 If</a></li>
+<li><a href="#63-发送和接收消息">6.3 发送和接收消息</a></li>
+</ul>
+</li>
+<li><a href="#7-将elixir添加到已有的erlang程序中">7 将Elixir添加到已有的Erlang程序中</a>
+<ul>
+<li><a href="#71-使用rebar集成">7.1 使用Rebar集成</a></li>
+<li><a href="#72-手动集成">7.2 手动集成</a></li>
+</ul>
+</li>
+<li><a href="#8-扩展阅读">8 扩展阅读</a></div>
+</div>
+
+
+<div id="outline-container-orgc037650" class="outline-4">
+<h4 id="原文erlangelixir-syntax-a-crash-course"><a id="orgc037650"></a>原文：<a href="http://elixir-lang.org/crash-course.html">Erlang/ElixirSyntax: A Crash Course</a></h4>
+<div class="outline-text-4" id="text-原文erlangelixir-syntax-a-crash-course">
+</div>
+</div>
+
+<div id="outline-container-org7b8911e" class="outline-2">
+<h2 id="erlangelixir语法速成"><a id="org7b8911e"></a>Erlang/Elixir语法速成</h2>
+<div class="outline-text-2" id="text-erlangelixir语法速成">
+<p>
+本文是针对Erlang开发人员的Elixir语法简介，同时也适用于试图了解Erlang的Elixir开发者。
+本文简要介绍了Elixir/Erlang语法，互操作能力，在线文档和示例代码等最基础的知识。
+</p>
+</div>
+
+
+<div id="outline-container-org684fbc8" class="outline-3">
+<h3 id="1-运行代码"><a id="org684fbc8"></a>1 运行代码</h3>
+<div class="outline-text-3" id="text-1-运行代码">
+</div>
+
+<div id="outline-container-org86629fa" class="outline-4">
+<h4 id="11-erlang"><a id="org86629fa"></a>1.1 Erlang</h4>
+<div class="outline-text-4" id="text-11-erlang">
+<p>
+最快速运行代码的方法是启动Erlang shell -
+=erl=。本文中大部分代码可以直接粘贴到shell中，
+Erlang中的命名函数必须包含在模块中，而且必须要在模块编译后才能使用。下面是一个模块的例子：
+</p>
+
+<pre class="example">
+% module_name.erl
+-module(module_name).  % you may use some other name
+-compile(export_all).
+
+hello() -&gt;
+  io:format("~s~n", ["Hello world!"]).
+</pre>
+
+<p>
+编辑文件并保存，在同一目录下运行=erl=，并执行=编译=命令
+</p>
+
+<pre class="example">
+Eshell V5.9  (abort with ^G)
+1&gt; c(module_name).
+ok
+1&gt; module_name:hello().
+Hello world!
+ok
+</pre>
+
+<p>
+shell运行的同时也可以编辑文件。
+但不要忘记执行=c(module_name)=来加载最新的更改。
+要注意，文件名必须与在=-module()=中声明的文件名保持一致，扩展名为=.erl=。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4089d8e" class="outline-4">
+<h4 id="12-elixir"><a id="org4089d8e"></a>1.2 Elixir</h4>
+<div class="outline-text-4" id="text-12-elixir">
+<p>
+与Erlang类似，Elixir有一个名为=iex=的交互式shell。编译Elixir代码可以使用=elixirc=（类似于Erlang的=erlc=）。
+Elixir还提供一个名为=elixir=的可执行文件来运行Elixir代码。上面的模块用Elixir来写就是这样：
+</p>
+
+<pre class="example">
+# module_name.ex
+defmodule ModuleName do
+  def hello do
+    IO.puts "Hello World"
+  end
+end
+</pre>
+
+<p>
+然后，在=iex=中编译：
+</p>
+
+<pre class="example">
+Interactive Elixir
+iex&gt; c("module_name.ex")
+[ModuleName]
+iex&gt; ModuleName.hello
+Hello world!
+:ok
+</pre>
+
+<p>
+要注意的是，在Elixir中，不要求模块必须保存在文件中，Elixir的模块可以直接在shell中定义：
+</p>
+
+<pre class="example">
+defmodule MyModule do
+  def hello do
+    IO.puts "Another Hello"
+  end
+end
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org98536e3" class="outline-3">
+<h3 id="2-显著差异"><a id="org98536e3"></a>2 显著差异</h3>
+<div class="outline-text-3" id="text-2-显著差异">
+<p>
+这一节讨论了两种语言之间的一些语法差异。
+</p>
+</div>
+
+<div id="outline-container-org38f7874" class="outline-4">
+<h4 id="21-操作符名称"><a id="org38f7874"></a>2.1 操作符名称</h4>
+<div class="outline-text-4" id="text-21-操作符名称">
+<p>
+部分操作符采用了不同的书写方式
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">ERLANG</th>
+<th scope="col" class="org-left">ELIXIR</th>
+<th scope="col" class="org-left">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">and    </td>
+<td class="org-left">不可用</td>
+<td class="org-left">逻辑‘与'，全部求值</td>
+</tr>
+
+<tr>
+<td class="org-left">andalso</td>
+<td class="org-left">and  </td>
+<td class="org-left">逻辑‘与'，采用短路求值策略</td>
+</tr>
+
+<tr>
+<td class="org-left">or    </td>
+<td class="org-left">不可用</td>
+<td class="org-left">逻辑‘或'，全部求值</td>
+</tr>
+
+<tr>
+<td class="org-left">orelse</td>
+<td class="org-left">or    </td>
+<td class="org-left">逻辑‘与'，采用短路求值策略</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>:</code></td>
+<td class="org-left"><code>=</code></td>
+<td class="org-left">全等</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>/</code></td>
+<td class="org-left">!==</td>
+<td class="org-left">不全等</td>
+</tr>
+
+<tr>
+<td class="org-left">/=</td>
+<td class="org-left">!=</td>
+<td class="org-left">不等于</td>
+</tr>
+
+<tr>
+<td class="org-left">=&lt;</td>
+<td class="org-left">&lt;=</td>
+<td class="org-left">小于等于</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org14a6452" class="outline-4">
+<h4 id="22-分隔符"><a id="org14a6452"></a>2.2 分隔符</h4>
+<div class="outline-text-4" id="text-22-分隔符">
+<p>
+Erlang表达式使用点号=.=作为结束，逗号=,=用来分割同一上下文中的多个表达式（例如在函数定义中）。
+在Elixir中，表达式由换行符或分号=;=分隔。
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+X = 2, Y = 3.
+X + Y.
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+x = 2; y = 3
+x + y
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org252a4b0" class="outline-4">
+<h4 id="23-变量名"><a id="org252a4b0"></a>2.3 变量名</h4>
+<div class="outline-text-4" id="text-23-变量名">
+<p>
+Erlang中的变量只能被绑定一次，Erlang
+shell提供一个特殊的命令=f=，用于删除某个变量或所有变量的绑定。
+Elixir允许变量被多次赋值，如果希望匹配变量之前的值，应当使用=^=。
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+Eshell V5.9  (abort with ^G)
+1&gt; X = 10.
+10
+2&gt; X = X + 1.
+** exception error: no match of right hand side value 11
+3&gt; X1 = X + 1.
+11
+4&gt; f(X).
+ok
+5&gt; X = X1 * X1.
+121
+6&gt; f().
+ok
+7&gt; X.
+* 1: variable 'X' is unbound
+8&gt; X1.
+* 1: variable 'X1' is unbound
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+iex&gt; a = 1
+1
+iex&gt; a = 2
+2
+iex&gt; ^a = 3
+** (MatchError) no match of right hand side value: 3
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orga7a9266" class="outline-4">
+<h4 id="24-函数调用"><a id="orga7a9266"></a>2.4 函数调用</h4>
+<div class="outline-text-4" id="text-24-函数调用">
+<p>
+Elixir允许在函数调用中省略括号，而Erlang不允许。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">ERLANG</th>
+<th scope="col" class="org-left">ELIXIR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">some_function().</td>
+<td class="org-left">some_function</td>
+</tr>
+
+<tr>
+<td class="org-left">sum(A, B)</td>
+<td class="org-left">sum a, b</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+调用模块中的函数的语法不同，Erlang中，下面的代码
+</p>
+
+<pre class="example">
+lists : last ([ 1 , 2 ]).
+</pre>
+
+<p>
+表示从=list=模块中调用函数=last=，而在Elixir中，使用点号=.=代替冒号=:=
+</p>
+
+<pre class="example">
+List.last([1, 2])
+</pre>
+
+<p>
+<b>注意</b>
+在Elixir中，由于Erlang的模块用原子表示，因此用如下方法调用Erlang的函数：
+</p>
+
+<pre class="example">
+:lists.sort [3, 2, 1]
+</pre>
+
+<p>
+所有Erlang的内置函数都包含在=:erlang=模块中
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8d6a409" class="outline-3">
+<h3 id="3-数据类型"><a id="org8d6a409"></a>3 数据类型</h3>
+<div class="outline-text-3" id="text-3-数据类型">
+<p>
+Erlang和Elixir的数据类型大部分都相同，但依然有一些差异。
+</p>
+</div>
+
+<div id="outline-container-org1527985" class="outline-4">
+<h4 id="31-原子"><a id="org1527985"></a>3.1 原子</h4>
+<div class="outline-text-4" id="text-31-原子">
+<p>
+Erlang中，=原子=是以小写字母开头的任意标志符，例如=ok=、=tuple=、=donut=.
+以大写字母开头的标识符则会被视为变量名。而在Elixir中，前者被用于变量名，而后者则被视为原子的别名。
+Elixir中的原子始终以冒号=:=作为首字符。
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+im_an_atom.
+me_too.
+
+Im_a_var.
+X = 10.
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+:im_an_atom
+:me_too
+
+im_a_var
+x = 10
+
+Module  # 称为原子别名; 展开后是 :'Elixir.Module'
+</pre>
+
+<p>
+非小写字母开头的标识符也可以作为原子。 不过两种语言的语法有所不同：
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+is_atom(ok).                %=&gt; true
+is_atom('0_ok').            %=&gt; true
+is_atom('Multiple words').  %=&gt; true
+is_atom('').                %=&gt; true
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+is_atom :ok                 #=&gt; true
+is_atom :'ok'               #=&gt; true
+is_atom Ok                  #=&gt; true
+is_atom :"Multiple words"   #=&gt; true
+is_atom :""                 #=&gt; true
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org5c62950" class="outline-4">
+<h4 id="32-元组"><a id="org5c62950"></a>3.2 元组</h4>
+<div class="outline-text-4" id="text-32-元组">
+<p>
+两种语言元组的语法是相同的，不过API有所不同，Elixir尝试使用下面的方法规范化Erlang库：
+</p>
+
+<ol class="org-ol">
+<li>函数的=subject=总是作为第一个参数。</li>
+<li>所有对数据结构的操作均基于零进行。</li>
+</ol>
+
+<p>
+也就是说，Elixir不会导入默认的=element=和=setelement=函数，而是提供=elem=和=put_elem=作为替代：
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+element(1, {a, b, c}).       %=&gt; a
+setelement(1, {a, b, c}, d). %=&gt; {d, b, c}
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+elem({:a, :b, :c}, 0)         #=&gt; :a
+put_elem({:a, :b, :c}, 0, :d) #=&gt; {:d, :b, :c}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org395b3cd" class="outline-4">
+<h4 id="33-列表与二进制串"><a id="org395b3cd"></a>3.3 列表与二进制串</h4>
+<div class="outline-text-4" id="text-33-列表与二进制串">
+<p>
+Elixir具有访问二进制串的快捷语法：
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+is_list('Hello').        %=&gt; false
+is_list("Hello").        %=&gt; true
+is_binary(&lt;&lt;"Hello"&gt;&gt;).  %=&gt; true
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+is_list 'Hello'          #=&gt; true
+is_binary "Hello"        #=&gt; true
+is_binary &lt;&lt;"Hello"&gt;&gt;    #=&gt; true
+&lt;&lt;"Hello"&gt;&gt; === "Hello"  #=&gt; true
+</pre>
+
+<p>
+Elixir中，*字符串*意味着一个UTF-8编码的二进制串，=String=模块可用于处理字符串。
+同时Elixir也希望程序源码采用UTF-8编码。而在Erlang中，*字符串*表示字符的列表，
+=:string=模块用于处理它们，但并没有采用UTF-8编码。
+</p>
+
+<p>
+Elixir还支持多行字符串（也被称为/heredocs/）：
+</p>
+
+<pre class="example">
+is_binary """
+This is a binary
+spanning several
+lines.
+"""
+#=&gt; true
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org4541913" class="outline-4">
+<h4 id="34-关键字列表keyword-list"><a id="org4541913"></a>3.4 关键字列表（Keyword list）</h4>
+<div class="outline-text-4" id="text-34-关键字列表keyword-list">
+<p>
+Elixir中，如果列表是由具有两个元素的元组组成，并且每个元组中的第一个元素是原子，则称这样的列表为关键字列表：
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+Proplist = [{another_key, 20}, {key, 10}].
+proplists:get_value(another_key, Proplist).
+%=&gt; 20
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+kw = [another_key: 20, key: 10]
+kw[:another_key]
+#=&gt; 20
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgba5df53" class="outline-4">
+<h4 id="35-映射（Map）"><a id="orgba5df53"></a>3.5 映射（Map）</h4>
+<div class="outline-text-4" id="text-35-映射（Map）">
+<p>
+Erlang
+R17中引入了映射，一种无序的键-值数据结构。键和值可以是任意的数据类型，
+映射的创建、更新和模式匹配如下所示：
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+Map = #{key =&gt; 0}.
+Updated = Map#{key := 1}.
+#{key := Value} = Updated.
+Value =:= 1.
+%=&gt; true
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+map = %{:key =&gt; 0}
+map = %{map | :key =&gt; 1}
+%{:key =&gt; value} = map
+value === 1
+#=&gt; true
+</pre>
+
+<p>
+当键为原子时，Elixir可以使用=key: 0=来定义映射，使用=.key=来访问值：
+</p>
+
+<pre class="example">
+map = %{key: 0}
+map = %{map | key: 1}
+map.key === 1
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org8ad52e3" class="outline-4">
+<h4 id="36-正则表达式"><a id="org8ad52e3"></a>3.6 正则表达式</h4>
+<div class="outline-text-4" id="text-36-正则表达式">
+<p>
+Elixir支持正则表达式语法，允许在编译（elixir源码）时编译正则表达式，
+而不是等到运行时再进行编译。而且对于特殊的字符，也无需进行多次转义：
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+{ ok, Pattern } = re:compile("abc\\s").
+re:run("abc ", Pattern).
+%=&gt; { match, ["abc "] }
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+Regex.run ~r/abc\s/, "abc "
+#=&gt; ["abc "]
+</pre>
+
+<p>
+支持在/heredocs/中书写正则，这样便于理解复杂正则
+</p>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+Regex.regex? ~r"""
+This is a regex
+spanning several
+lines.
+"""
+#=&gt; true
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4e9085b" class="outline-3">
+<h3 id="4-模块"><a id="org4e9085b"></a>4 模块</h3>
+<div class="outline-text-3" id="text-4-模块">
+<p>
+每个Erlang模块都保存在与其同名的文件中，具有以下结构：
+</p>
+
+<pre class="example">
+-module(hello_module).
+-export([some_fun/0, some_fun/1]).
+
+% A "Hello world" function
+some_fun() -&gt;
+  io:format('~s~n', ['Hello world!']).
+
+% This one works only with lists
+some_fun(List) when is_list(List) -&gt;
+  io:format('~s~n', List).
+
+% Non-exported functions are private
+priv() -&gt;
+  secret_info.
+</pre>
+
+<p>
+在这里，我们创建了一个名为=hello_module=的模块。模块中定义了三个函数，
+顶部的=export=指令导出了前两个函数，让它们能够被其他模块调用。=export=指令里包含了需要导出函数的列表，
+其中每个函数都写作=&lt;函数名&gt;/&lt;元数&gt;=的形式。在这里，元数表示函数参数的个数。
+</p>
+
+<p>
+和上述Erlang代码作用相同的Elixir代码：
+</p>
+
+<pre class="example">
+defmodule HelloModule do
+  # A "Hello world" function
+  def some_fun do
+    IO.puts "Hello world!"
+  end
+
+  # This one works only with lists
+  def some_fun(list) when is_list(list) do
+    IO.inspect list
+  end
+
+  # A private function
+  defp priv do
+    :secret_info
+  end
+end
+</pre>
+
+<p>
+在Elixir中，一个文件中可以包含多个模块，并且还允许嵌套定义模块：
+</p>
+
+<pre class="example">
+defmodule HelloModule do
+  defmodule Utils do
+    def util do
+      IO.puts "Utilize"
+    end
+
+    defp priv do
+      :cant_touch_this
+    end
+  end
+
+  def dummy do
+    :ok
+  end
+end
+
+defmodule ByeModule do
+end
+
+HelloModule.dummy
+#=&gt; :ok
+
+HelloModule.Utils.util
+#=&gt; "Utilize"
+
+HelloModule.Utils.priv
+#=&gt; ** (UndefinedFunctionError) undefined function: HelloModule.Utils.priv/0
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org464c002" class="outline-3">
+<h3 id="5-函数语法"><a id="org464c002"></a>5 函数语法</h3>
+<div class="outline-text-3" id="text-5-函数语法">
+<p>
+「Learn You Some
+Erlang」书中的<a href="http://learnyousomeerlang.com/syntax-in-functions">这一章</a>详细讲解了Erlang的模式匹配和函数语法。
+而本文只简要介绍主要内容并展示部分示例代码。
+</p>
+</div>
+
+<div id="outline-container-org297d18f" class="outline-4">
+<h4 id="51-模式匹配"><a id="org297d18f"></a>5.1 模式匹配</h4>
+<div class="outline-text-4" id="text-51-模式匹配">
+<p>
+Elixir中的模式匹配基于于Erlang实现，两者通常非常类似：
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+loop_through([H | T]) -&gt;
+  io:format('~p~n', [H]),
+  loop_through(T);
+
+loop_through([]) -&gt;
+  ok.
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+def loop_through([h | t]) do
+  IO.inspect h
+  loop_through t
+end
+
+def loop_through([]) do
+  :ok
+end
+</pre>
+
+<p>
+当多次定义名称相同的函数时，每个这样的定义称为*子句* 。
+在Erlang中，子句总是按顺序写在一起并使用分号=;=分隔 。
+最后一个子句用点号=.=结束。
+</p>
+
+<p>
+Elixir不需要通过符号来分隔子句，不过要求子句必须按顺序写在一起。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf1edf99" class="outline-4">
+<h4 id="52-函数识别"><a id="orgf1edf99"></a>5.2 函数识别</h4>
+<div class="outline-text-4" id="text-52-函数识别">
+<p>
+在Erlang和Elixir中，仅凭函数名是无法区分一个函数的。必须通过函数名和元数加以区分。
+下面两个例子中，我们定义了四个不同的函数（所有名字都为=sum=，但它们具有不同的元数）：
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+sum() -&gt; 0.
+sum(A) -&gt; A.
+sum(A, B) -&gt; A + B.
+sum(A, B, C) -&gt; A + B + C.
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+def sum, do: 0
+def sum(a), do: a
+def sum(a, b), do: a + b
+def sum(a, b, c), do: a + b + c
+</pre>
+
+<p>
+Guard表达式提供了一种简明的方法来定义在不同条件下接受有限个数参数的函数。
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+sum(A, B) when is_integer(A), is_integer(B) -&gt;
+  A + B;
+
+sum(A, B) when is_list(A), is_list(B) -&gt;
+  A ++ B;
+
+sum(A, B) when is_binary(A), is_binary(B) -&gt;
+  &lt;&lt;A/binary,  B/binary&gt;&gt;.
+
+sum(1, 2).
+%=&gt; 3
+
+sum([1], [2]).
+%=&gt; [1, 2]
+
+sum("a", "b").
+%=&gt; "ab"
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+def sum(a, b) when is_integer(a) and is_integer(b) do
+  a + b
+end
+
+def sum(a, b) when is_list(a) and is_list(b) do
+  a ++ b
+end
+
+def sum(a, b) when is_binary(a) and is_binary(b) do
+  a &lt;&gt; b
+end
+
+sum 1, 2
+#=&gt; 3
+
+sum [1], [2]
+#=&gt; [1, 2]
+
+sum "a", "b"
+#=&gt; "ab"
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org95c6d1b" class="outline-4">
+<h4 id="53-默认值"><a id="org95c6d1b"></a>5.3 默认值</h4>
+<div class="outline-text-4" id="text-53-默认值">
+<p>
+Elixir允许参数具有默认值，而Erlang不允许。
+</p>
+
+<pre class="example">
+def mul_by(x, n \\ 2) do
+  x * n
+end
+
+mul_by 4, 3 #=&gt; 12
+mul_by 4    #=&gt; 8
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org90ec3e6" class="outline-4">
+<h4 id="54-匿名函数"><a id="org90ec3e6"></a>5.4 匿名函数</h4>
+<div class="outline-text-4" id="text-54-匿名函数">
+<p>
+定义匿名函数：
+</p>
+
+<pre class="example">
+Sum = fun(A, B) -&gt; A + B end.
+Sum(4, 3).
+%=&gt; 7
+
+Square = fun(X) -&gt; X * X end.
+lists:map(Square, [1, 2, 3, 4]).
+%=&gt; [1, 4, 9, 16]
+</pre>
+
+<pre class="example">
+sum = fn(a, b) -&gt; a + b end
+sum.(4, 3)
+#=&gt; 7
+
+square = fn(x) -&gt; x * x end
+Enum.map [1, 2, 3, 4], square
+#=&gt; [1, 4, 9, 16]
+</pre>
+
+<p>
+定义匿名函数时也可以使用模式匹配。
+</p>
+
+<pre class="example">
+F = fun(Tuple = {a, b}) -&gt;
+        io:format("All your ~p are belong to us~n", [Tuple]);
+        ([]) -&gt;
+        "Empty"
+    end.
+
+F([]).
+%=&gt; "Empty"
+
+F({a, b}).
+%=&gt; "All your {a, b} are belong to us"
+</pre>
+
+<pre class="example">
+f = fn
+      {:a, :b} = tuple -&gt;
+        IO.puts "All your #{inspect tuple} are belong to us"
+      [] -&gt;
+        "Empty"
+    end
+
+f.([])
+#=&gt; "Empty"
+
+f.({:a, :b})
+#=&gt; "All your {:a, :b} are belong to us"
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgb4826a5" class="outline-4">
+<h4 id="55-作为一等公民first-class的函数"><a id="orgb4826a5"></a>5.5 作为一等公民（first-class）的函数</h4>
+<div class="outline-text-4" id="text-55-作为一等公民first-class的函数">
+<p>
+匿名函数是/first-class
+values/，因此它们可以当作参数传递给其他函数，也可以被当作返回值。
+对于命名函数，可以使用如下语法实现上述功能。
+</p>
+
+<pre class="example">
+-module(math).
+-export([square/1]).
+
+square(X) -&gt; X * X.
+
+lists:map(fun math:square/1, [1, 2, 3]).
+%=&gt; [1, 4, 9]
+</pre>
+
+<pre class="example">
+defmodule Math do
+  def square(x) do
+    x * x
+  end
+end
+
+Enum.map [1, 2, 3], &amp;Math.square/1
+#=&gt; [1, 4, 9]
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org33ab24d" class="outline-4">
+<h4 id="56-elixir中的局部应用与函数捕捉"><a id="org33ab24d"></a>5.6 Elixir中的局部应用与函数捕捉</h4>
+<div class="outline-text-4" id="text-56-elixir中的局部应用与函数捕捉">
+<p>
+Elixir可以利用函数的局部应用（partial
+application），以简洁的方式定义匿名函数：
+</p>
+
+<pre class="example">
+Enum.map [1, 2, 3, 4], &amp;(&amp;1 * 2)
+#=&gt; [2, 4, 6, 8]
+
+List.foldl [1, 2, 3, 4], 0, &amp;(&amp;1 + &amp;2)
+#=&gt; 10
+</pre>
+
+<p>
+函数捕捉同样使用=&amp;=操作符，它使得命名函数可以作为参数传递。
+</p>
+
+<pre class="example">
+defmodule Math do
+  def square(x) do
+    x * x
+  end
+end
+
+Enum.map [1, 2, 3], &amp;Math.square/1
+#=&gt; [1, 4, 9]
+</pre>
+
+<p>
+上面的代码相当于Erlang的=fun math:square/1= 。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org593fc01" class="outline-3">
+<h3 id="6-流程控制"><a id="org593fc01"></a>6. 流程控制</h3>
+<div class="outline-text-3" id="text-6-流程控制">
+<p>
+=if=和=case=结构在Erlang和Elixir中实际上是表达式，不过依然可以像命令式语言的语句那样，用于流程控制
+</p>
+</div>
+
+<div id="outline-container-orge644d12" class="outline-4">
+<h4 id="61-case"><a id="orge644d12"></a>6.1 Case</h4>
+<div class="outline-text-4" id="text-61-case">
+<p>
+=case=结构是完全基于模式匹配的流程控制。
+</p>
+
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+case {X, Y} of
+  {a, b} -&gt; ok;
+  {b, c} -&gt; good;
+  Else -&gt; Else
+end
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+case {x, y} do
+  {:a, :b} -&gt; :ok
+  {:b, :c} -&gt; :good
+  other -&gt; other
+end
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org77867f6" class="outline-4">
+<h4 id="62-if"><a id="org77867f6"></a>6.2 If</h4>
+<div class="outline-text-4" id="text-62-if">
+<p>
+<b>Erlang</b>
+</p>
+
+<pre class="example">
+Test_fun = fun (X) -&gt;
+  if X &gt; 10 -&gt;
+       greater_than_ten;
+     X &lt; 10, X &gt; 0 -&gt;
+       less_than_ten_positive;
+     X &lt; 0; X =:= 0 -&gt;
+       zero_or_negative;
+     true -&gt;
+       exactly_ten
+  end
+end.
+
+Test_fun(11).
+%=&gt; greater_than_ten
+
+Test_fun(-2).
+%=&gt; zero_or_negative
+
+Test_fun(10).
+%=&gt; exactly_ten
+</pre>
+
+<p>
+<b>Elixir</b>
+</p>
+
+<pre class="example">
+test_fun = fn(x) -&gt;
+  cond do
+    x &gt; 10 -&gt;
+      :greater_than_ten
+    x &lt; 10 and x &gt; 0 -&gt;
+      :less_than_ten_positive
+    x &lt; 0 or x === 0 -&gt;
+      :zero_or_negative
+    true -&gt;
+      :exactly_ten
+  end
+end
+
+test_fun.(44)
+#=&gt; :greater_than_ten
+
+test_fun.(0)
+#=&gt; :zero_or_negative
+
+test_fun.(10)
+#=&gt; :exactly_ten
+</pre>
+
+<p>
+Elixir的=cond=和Erlang的=if=有两个重要的区别：
+</p>
+
+<ul class="org-ul">
+<li>=cond=允许左侧为任意表达式，而Erlang只允许Guard子句；</li>
+<li>=cond=使用Elixir中的真值概念（除了=nil=和=false=皆为真值），而Erlang的=if=则严格的期望一个布尔值；</li>
+</ul>
+
+<p>
+Elixir同样提供了一个类似于命令式语言中=if=的功能，用于检查一个子句是true还是false：
+</p>
+
+<pre class="example">
+if x &gt; 10 do
+  :greater_than_ten
+else
+  :not_greater_than_ten
+end
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgeaa179d" class="outline-4">
+<h4 id="63-发送和接收消息"><a id="orgeaa179d"></a>6.3 发送和接收消息</h4>
+<div class="outline-text-4" id="text-63-发送和接收消息">
+<p>
+发送和接收消息的语法仅略有不同：
+</p>
+
+<pre class="example">
+Pid = self().
+
+Pid ! {hello}.
+
+receive
+  {hello} -&gt; ok;
+  Other -&gt; Other
+after
+  10 -&gt; timeout
+end.
+</pre>
+
+<pre class="example">
+pid = Kernel.self
+
+send pid, {:hello}
+
+receive do
+  {:hello} -&gt; :ok
+  other -&gt; other
+after
+  10 -&gt; :timeout
+end
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2016008" class="outline-3">
+<h3 id="7-将elixir添加到已有的erlang程序中"><a id="org2016008"></a>7 将Elixir添加到已有的Erlang程序中</h3>
+<div class="outline-text-3" id="text-7-将elixir添加到已有的erlang程序中">
+<p>
+Elixir会被编译成BEAM字节码（通过Erlang抽象格式）。这意味着Elixir和Erlang的代码可以互相调用而不需要添加其他任何绑定。
+Erlang代码中使用Elixir模块须要以=Elixir.=作为前缀，然后将Elixir的调用附在其后。
+例如，这里演示了在Erlang中如何使用Elixir的=String=模块：
+</p>
+
+<pre class="example">
+-module(bstring).
+-export([downcase/1]).
+
+downcase(Bin) -&gt;
+  'Elixir.String':downcase(Bin).
+</pre>
+</div>
+
+<div id="outline-container-org064006b" class="outline-4">
+<h4 id="71-使用rebar集成"><a id="org064006b"></a>7.1 使用Rebar集成</h4>
+<div class="outline-text-4" id="text-71-使用rebar集成">
+<p>
+如果使用rebar，应当把Elixir的git仓库引入并作为依赖添加：
+</p>
+
+<pre class="example">
+https://github.com/elixir-lang/elixir.git
+</pre>
+
+<p>
+Elixir的结构与Erlang的OTP类似，被分为不同的应用放在=lib=目录下，可以在<a href="https://github.com/elixir-lang/elixir">Elixir源码仓库</a>中看到这种结构。
+由于rebar无法识别这种结构，因此需要在=rebar.config=中明确的配置所需要的Elixir应用，例如：
+</p>
+
+<pre class="example">
+{lib_dirs, [
+  "deps/elixir/lib"
+]}.
+</pre>
+
+<p>
+这样就能直接从Erlang调用Elixir代码了，如果需要编写Elixir代码，还应安装<a href="https://github.com/yrashk/rebar_elixir_plugin">自动编译Elixir的rebar插件</a>。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf38b6b9" class="outline-4">
+<h4 id="72-手动集成"><a id="orgf38b6b9"></a>7.2 手动集成</h4>
+<div class="outline-text-4" id="text-72-手动集成">
+<p>
+如果不使用rebar，在已有Erlang软件中使用Elixir的最简单的方式是按照<a href="http://elixir-lang.org/getting-started/introduction.html">入门指南</a>中的方法安装Elixir，然后将=lib=添目录加到=ERL_LIBS=中。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3c6cf3c" class="outline-3">
+<h3 id="8-扩展阅读"><a id="org3c6cf3c"></a>8 扩展阅读</h3>
+<div class="outline-text-3" id="text-8-扩展阅读">
+<p>
+Erlang的官方文档网站有不错的编程<a href="http://www.erlang.org/doc/programming_examples/users_guide.html">示例集</a>，把它们重新用Elixir实现一遍是不错的练习方法。
+<a href="http://schemecookbook.org/Erlang/TOC">Erlang
+cookbook</a>也提供了更多有用的代码示例。
+</p>
+
+<p>
+还可以进一步阅读Elixir的<a href="http://elixir-lang.org/getting-started/introduction.html">入门指南</a>和<a href="http://elixir-lang.org/docs.html">在线文档</a>。
+</p>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2017-01-01</span>
+        <span title="last modification date" class="post-info">2020-04-09</span>
+        <span title="tags" class="post-info"><a href="/tags/elixir/">elixir</a>, <a href="/tags/erlang/">erlang</a>, <a href="/tags/翻译/">翻译</a></span>
+        <span title="author" class="post-info">bigfang</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2017-01-01/trans-crash-course-md.html";
+          var disqus_url = "http://bigfang.net/blog/2017-01-01/trans-crash-course-md.html";
+          var disqus_shortname = 'bigfang';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-37180058-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:bitair &lt;at&gt; gmail &lt;dot&gt; com">bigfang</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

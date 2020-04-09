@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>【译】在Elixir中创建riak_core应用（3） - ╮(╯3╰)╭</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="bigfang" />
+    <meta name="description" content="create riak_core app" />
+    <meta name="keywords" content="elixir" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
+  </head>
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="/">╮(╯3╰)╭</a></h1>
+        <p>虽然不太明白，但是好厉害啊</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/bigfang">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="bigfang.net">
+        </form>
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>【译】在Elixir中创建riak_core应用（3）</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#原文create-a-riak_core-application-in-elixir-part-3">0.1. 原文：Createa riak<sub>core</sub> application in Elixir (Part 3)</a></li>
+</ul>
+</li>
+<li><a href="#在elixir中创建riak_core应用3">1. 在Elixir中创建riak<sub>core应用</sub>（3）</a>
+<ul>
+<li><a href="#移交handoff">1.1. 移交（Handoff）</a>
+<ul>
+<li><a href="#handoff_startingdest-state">1.1.1. handoff<sub>starting</sub>(dest, state)</a></li>
+<li><a href="#handoff_cancelledstate">1.1.2. handoff<sub>cancelled</sub>(state)</a></li>
+<li><a href="#is_emptystate">1.1.3. is<sub>empty</sub>(state)</a></li>
+<li><a href="#handle_handoff_commandrequest-sender-state">1.1.4. handle<sub>handoff</sub><sub>command</sub>(request, sender, state)</a></li>
+<li><a href="#encode_handoff_itemk-v">1.1.5. encode<sub>handoff</sub><sub>item</sub>(k, v)</a></li>
+<li><a href="#handle_handoff_databin_data-state">1.1.6. handle<sub>handoff</sub><sub>data</sub>(bin<sub>data</sub>, state)</a></li>
+<li><a href="#handoff_finisheddest-state">1.1.7. handoff<sub>finished</sub>(dest, state)</a></li>
+<li><a href="#deletestate">1.1.8. delete(state)</a></li>
+<li><a href="#terminatereason-state">1.1.9. terminate(reason, state)</a></li>
+</ul>
+</li>
+<li><a href="#总结">1.2. 总结</a></li>
+<li><a href="#参考">1.3. 参考：</a></li>
+</ul>
+</div>
+</div>
+<p>
+因为网上关于elixir使用riak<sub>core的文章很少</sub>，正好elixirstatus又推送了这几篇，于是就抱着正好学英语心态翻译了一下，
+对于我这种英文水平，弄这个确实费了不少功夫，不过倒是培养了对洋文内容的耐心。看到英文不再那么心浮气躁了。
+以至于今天早晨竟然躺在床上看完了两篇挺长的讲phoenix的英文文章。
+</p>
+
+<p>
+也许是我水平的原因吧，这个系列的第三篇理解起来完全没有床上的那篇顺利，我甚至产生了一种作者没有在认真写的错觉。
+所以决定以后就不翻译这种公共博客平台上的文章了，感觉总体上质量不如那些自建博客的。
+</p>
+
+<div id="outline-container-org3949aee" class="outline-3">
+<h3 id="原文create-a-riak_core-application-in-elixir-part-3"><a id="org3949aee"></a><span class="section-number-3">0.1</span> 原文：<a href="https://medium.com/@GPad/create-a-riak-core-application-in-elixir-part-3-8bac36632be0">Createa riak<sub>core</sub> application in Elixir (Part 3)</a></h3>
+<div class="outline-text-3" id="text-原文create-a-riak_core-application-in-elixir-part-3">
+<p>
+这篇有的地方简直不知所云，尤其是讲=handle<sub>handoff</sub><sub>command</sub>=的那一段，说了第一点，然后就找不着第二点了。
+导致我越来越摸不着头脑。想了想还是把这篇烂翻译放出来吧，好在代码比较容易看懂，有点背景知识连蒙带猜还是能知道大概的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf57817c" class="outline-2">
+<h2 id="在elixir中创建riak_core应用3"><a id="orgf57817c"></a><span class="section-number-2">1</span> 在Elixir中创建riak<sub>core应用</sub>（3）</h2>
+<div class="outline-text-2" id="text-在elixir中创建riak_core应用3">
+<p>
+嗨，欢迎回来！这已经是本系列的第三篇文章了。在<a href="https://medium.com/@GPad/create-a-riak-core-application-in-elixir-part-2-88bdec73f368">上一篇</a>
+文章中，我提出了这样几个问题：
+</p>
+
+<ul class="org-ul">
+<li>如果一个节点使用=:riak<sub>core.leave</sub>=离开集群，会发生什么？</li>
+<li>如果某个节点崩溃，会发生什么？</li>
+<li>如何获取所有的键？</li>
+</ul>
+
+<p>
+本文中，我们将尝试回答第一个问题，/如果一个节点退出集群，会发生什么？/
+</p>
+
+<p>
+<a href="https://cdn-images-1.medium.com/max/1600/0*9bU3ClL1A46_SjCe.">https://cdn-images-1.medium.com/max/1600/0*9bU3ClL1A46_SjCe.</a>
+</p>
+
+<p>
+或许你在阅读本文之前，已经做了实验，那么你会发现一些数据丢失了。同样，添加节点也会导致这个问题，为什么？
+</p>
+</div>
+
+<div id="outline-container-org30a0949" class="outline-3">
+<h3 id="移交handoff"><a id="org30a0949"></a><span class="section-number-3">1.1</span> 移交（Handoff）</h3>
+<div class="outline-text-3" id="text-移交handoff">
+<p>
+还记得数据在集群中是如何组织的么？固定数量的虚拟节点（vnode）平均的分布在大量的物理节点之上，
+每个vnode管理着键空间上的一个分区（partition）。当只有一个物理节点时，所有的虚拟节点都分布在该节点上，
+当添加一个（物理）节点后，一部分虚拟节点就会“移动”到这第二个节点上来。现实中，这个过程有点儿复杂，
+因为虚拟节点并不会自己移动，第一个节点启动后，它会启动所有的虚拟节点，然后第二个节点加入，
+这时，两个节点会同时运行所有的虚拟节点。Riak<sub>core会执行这样一个过程</sub>：杀死每个物理节点上不必要的虚拟节点，
+同时把数据从一个物理节点移动到另一个物理节点。这个过程被称为移交（handoff）。可以在Riak<sub>core的</sub><a href="https://github.com/basho/riak_core/wiki/Handoffs">wiki</a>查看更详细内容。
+</p>
+
+<p>
+如果你还记得，在<a href="https://github.com/basho/riak_core/blob/develop/src/riak_core_vnode.erl#L95">vnode的行为</a>（behaviour）中
+有一些专门用来管理移交的函数，riak<sub>core就是通过调用这些函数来管理本文开头的那种情况的</sub>，让我们来填上/正确的/代码，开始吧！
+</p>
+
+
+<div class="figure">
+<p><img src="https://cdn-images-1.medium.com/max/1600/0*nZYEA6HjAS7uHN4r.jpg" alt="0*nZYEA6HjAS7uHN4r.jpg" />
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbe9f2df" class="outline-4">
+<h4 id="handoff_startingdest-state"><a id="orgbe9f2df"></a><span class="section-number-4">1.1.1</span> handoff<sub>starting</sub>(dest, state)</h4>
+<div class="outline-text-4" id="text-handoff_startingdest-state">
+<p>
+该函数是riak<sub>core调用的第一个函数</sub>，表示移交开始。（目标）vnode应该返回={true, state}=来继续移交过程并管理vnode的状态。
+如果有任何原因导致vnode无法管理移交过程，那么应该返回false并推迟移交。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8f0e3d5" class="outline-4">
+<h4 id="handoff_cancelledstate"><a id="org8f0e3d5"></a><span class="section-number-4">1.1.2</span> handoff<sub>cancelled</sub>(state)</h4>
+<div class="outline-text-4" id="text-handoff_cancelledstate">
+<p>
+如果有什么原因导致移交过程停止，该函数将会被调用。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3c388b6" class="outline-4">
+<h4 id="is_emptystate"><a id="org3c388b6"></a><span class="section-number-4">1.1.3</span> is<sub>empty</sub>(state)</h4>
+<div class="outline-text-4" id="text-is_emptystate">
+<p>
+riak<sub>core调用该函数来评估vnode是否含有数据</sub>。如果vnode返回={:true, state}=即表示不存在数据，
+那么就会立即调用=delete=函数（来执行删除），否则/真正的/移交过程会从=handle<sub>handoff</sub><sub>command</sub>=开始
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge7b9efe" class="outline-4">
+<h4 id="handle_handoff_commandrequest-sender-state"><a id="orge7b9efe"></a><span class="section-number-4">1.1.4</span> handle<sub>handoff</sub><sub>command</sub>(request, sender, state)</h4>
+<div class="outline-text-4" id="text-handle_handoff_commandrequest-sender-state">
+<p>
+该函数在移交中被调用主要用来管理两种情况，第一种是将数据从源物理节点传输到目标节点，
+这时调用该函数使用的=request=参数是一个类型为=riak<sub>core</sub><sub>fol</sub><sub>req</sub><sub>v2</sub>=的记录（record）。
+为了能够操作这个记录，我们需要从Erlang的include文件中导入该record的定义。
+为此，我们需要使用<a href="https://hexdocs.pm/elixir/Record.html">Record</a>模块，代码如下：
+</p>
+
+<pre class="example">
+defmodule NoSlides.VNode do
+  require Logger
+  @behaviour :riak_core_vnode
+
+  # ...
+
+  require Record
+  Record.defrecord :fold_req_v2, :riak_core_fold_req_v2, Record.extract(:riak_core_fold_req_v2, from_lib: "riak_core/include/riak_core_vnode.hrl")
+
+  def handle_handoff_command(fold_req_v2() = fold_req, _sender, state) do
+    Logger.debug "&gt;&gt;&gt;&gt;&gt; Handoff V2 &lt;&lt;&lt;&lt;&lt;&lt;"
+    foldfun = fold_req_v2(fold_req, :foldfun)
+    acc0 = fold_req_v2(fold_req, :acc0)
+    acc_final = state.data |&gt; Enum.reduce(acc0, fn {k, v}, acc -&gt;
+      foldfun.(k, v, acc)
+    end)
+    {:reply, acc_final, state}
+  end
+
+  def handle_handoff_command(request, sender, state) do
+    Logger.debug "&gt;&gt;&gt; Handoff generic request &lt;&lt;&lt;"
+    handle_command(request, sender, state)
+  end
+
+  # ...
+
+end
+</pre>
+
+<p>
+在第8行，从riak<sub>core的头文件中导入了record的定义</sub>。然后，我们使用已定义的record作为第10行中进行模式匹配的函数的目标。
+这个函数的作用只是在移交过程中转移数据。这个record包含两个重要的部分，=foldfun=和=acc0=，=foldfun=应当包含一个被每条移动的数据调用的函数。
+如果你知道<a href="https://en.wikipedia.org/wiki/Fold_(higher-order_function)">reduce</a>（或是fold）的概念，这个过程应该很熟悉。
+循环集合（collection）中的数据，从一个预先定义的值开始
+将数据累积在一个变量中。我们的例子中，初始值是从接收到的record中提取出来的=acc0=。
+14行到16行，我们从=state.data=中获取vnode的所有数据，然后交给=Enum.reduce/3=处理。这里依然使用=acc0=作为初始值。最后，
+我们定义了一个匿名函数接收键值对和累加值，并把键值对和累加值传递给=foldfun=，将这个运算的结果作为这个函数的最终返回值。
+</p>
+
+<p>
+在这个操作中，如果vnode接收到一个普通命令，比如=get=或者=put=，riak<sub>core将路由这些请求</sub>，
+把他们发往=handle<sub>handoff</sub><sub>command</sub>=函数而不是使用=handle<sub>command</sub>=。在我们这里，通过模式匹配识别出这种情况，然后直接调用=handle<sub>command</sub>=，在这个过程中，riak<sub>core接收数据并传给</sub>=foldfun=，
+为了将数据传输到目标物理节点，另一个函数会被用来把数据转换为二进制形式，。这个函数是encode<sub>handoff</sub><sub>item</sub>。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf1b7b68" class="outline-4">
+<h4 id="encode_handoff_itemk-v"><a id="orgf1b7b68"></a><span class="section-number-4">1.1.5</span> encode<sub>handoff</sub><sub>item</sub>(k, v)</h4>
+<div class="outline-text-4" id="text-encode_handoff_itemk-v">
+<p>
+这个函数很简单，要求对数据进行编码以便传输，其他节点得到数据后再进行解码，我们可以简单的填上：
+</p>
+
+<pre class="example">
+:erlang.term_to_binary({k, v})
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgfc73c76" class="outline-4">
+<h4 id="handle_handoff_databin_data-state"><a id="orgfc73c76"></a><span class="section-number-4">1.1.6</span> handle<sub>handoff</sub><sub>data</sub>(bin<sub>data</sub>, state)</h4>
+<div class="outline-text-4" id="text-handle_handoff_databin_data-state">
+<p>
+在另一个节点上接受到的数据，用如下的Erlang的函数来解码数据：
+</p>
+
+<pre class="example">
+{k, v} = :erlang.binary_to_term(bin_data)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgc58bf6c" class="outline-4">
+<h4 id="handoff_finisheddest-state"><a id="orgc58bf6c"></a><span class="section-number-4">1.1.7</span> handoff<sub>finished</sub>(dest, state)</h4>
+<div class="outline-text-4" id="text-handoff_finisheddest-state">
+<p>
+当该函数执行，表示移交过程已经结束。如果一切顺利，应当返回={:ok, state}=。它在=delete=函数和=terminate=函数之前执行的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org46e74ca" class="outline-4">
+<h4 id="deletestate"><a id="org46e74ca"></a><span class="section-number-4">1.1.8</span> delete(state)</h4>
+<div class="outline-text-4" id="text-deletestate">
+<p>
+该函数在vnode被终止之前被调用，我们应当删除所有数据，在我们的例子中，因为没有存储任何东西，所以返回的state应当采用下面的形式：
+</p>
+
+<pre class="example">
+{:ok, Map.put(state, :data, %{})}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org5cc2fb9" class="outline-4">
+<h4 id="terminatereason-state"><a id="org5cc2fb9"></a><span class="section-number-4">1.1.9</span> terminate(reason, state)</h4>
+<div class="outline-text-4" id="text-terminatereason-state">
+<p>
+这是整个移交过程的最后一个函数，可以输出日志来记录终止的原因，在我们的例子中，应当为=:normal=
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org09a7d90" class="outline-3">
+<h3 id="总结"><a id="org09a7d90"></a><span class="section-number-3">1.2</span> 总结</h3>
+<div class="outline-text-3" id="text-总结">
+<p>
+正如你看到的那样，在发送端节点上调用了很多的函数，而在接收端节点上，只有=handle<sub>handoff</sub><sub>data</sub>=被调用。
+要记住，=handle<sub>handoff</sub><sub>command</sub>=更为重要一些，因为它接收封装在fold<sub>req</sub><sub>v2记录中的数据</sub>，但也要记得它也能接收普通的命令。
+</p>
+
+<p>
+另一个有趣的事情就是函数=handoff<sub>started</sub>=，vnode可以选择导出这个函数，这样它才会被调用，只有在这种情况下，当移交开始，vnode才能够停止移交并返回={:error, reason}=。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfd2fce5" class="outline-3">
+<h3 id="参考"><a id="orgfd2fce5"></a><span class="section-number-3">1.3</span> 参考：</h3>
+<div class="outline-text-3" id="text-参考">
+<p>
+我们的所有实现都放在了这个<a href="https://github.com/gpad/no_slides">Repo</a>，另外还有一些basho发表的关于如何管理移交的有趣的文章：
+</p>
+
+<ul class="org-ul">
+<li><a href="http://basho.com/posts/technical/understanding-riak_core-handoff/">http://basho.com/posts/technical/understanding-riak<sub>core</sub>-handoff/</a></li>
+<li><a href="http://basho.com/posts/technical/understanding-riak_core-visitfun/">http://basho.com/posts/technical/understanding-riak<sub>core</sub>-visitfun/</a></li>
+<li><a href="http://basho.com/posts/technical/understanding-riak_core-building-handoff/">http://basho.com/posts/technical/understanding-riak<sub>core</sub>-building-handoff/</a></li>
+</ul>
+
+<p>
+在下一篇中，我将讨论“如何获取所有的键”，我们会在最后一篇来讨论怎样管理崩溃节点。
+</p>
+
+<p>
+如果你有问题或者不清楚的地方，请在下面留言。下次再见！
+</p>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2017-02-26</span>
+        <span title="last modification date" class="post-info">2020-04-09</span>
+        <span title="tags" class="post-info"><a href="/tags/elixir/">elixir</a>, <a href="/tags/erlang/">erlang</a>, <a href="/tags/riak_core/">riak_core</a>, <a href="/tags/分布式/">分布式</a>, <a href="/tags/翻译/">翻译</a></span>
+        <span title="author" class="post-info">bigfang</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2017-02-26/create-a-riak-core-app-in-elixir-3.html";
+          var disqus_url = "http://bigfang.net/blog/2017-02-26/create-a-riak-core-app-in-elixir-3.html";
+          var disqus_shortname = 'bigfang';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-37180058-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:bitair &lt;at&gt; gmail &lt;dot&gt; com">bigfang</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>后台运行PhoenixFramework应用 - ╮(╯3╰)╭</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="bigfang" />
+    <meta name="keywords" content="elixir" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
+  </head>
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="/">╮(╯3╰)╭</a></h1>
+        <p>虽然不太明白，但是好厉害啊</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/bigfang">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="bigfang.net">
+        </form>
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>后台运行PhoenixFramework应用</h1>
+<p>
+如果你不打算用=Exrm=来部署应用的话，就用下面这条命令吧
+</p>
+
+<pre class="example">
+MIX_ENV=prod PORT=4001 elixir --detached -S mix phoenix.server
+</pre>
+
+<p>
+附上目前版本的=elixir &#x2013;help=
+</p>
+
+<pre class="example">
+% elixir --help
+Usage: elixir [options] [.exs file] [data]
+
+  -v                          Prints version and exits
+  -e COMMAND                  Evaluates the given command (*)
+  -r FILE                     Requires the given files/patterns (*)
+  -S SCRIPT                   Finds and executes the given script in PATH
+  -pr FILE                    Requires the given files/patterns in parallel (*)
+  -pa PATH                    Prepends the given path to Erlang code path (*)
+  -pz PATH                    Appends the given path to Erlang code path (*)
+
+  --app APP                   Starts the given app and its dependencies (*)
+  --cookie COOKIE             Sets a cookie for this distributed node
+  --detached                  Starts the Erlang VM detached from console
+  --erl SWITCHES              Switches to be passed down to Erlang (*)
+  --hidden                    Makes a hidden node
+  --logger-otp-reports BOOL   Enables or disables OTP reporting
+  --logger-sasl-reports BOOL  Enables or disables SASL reporting
+  --name NAME                 Makes and assigns a name to the distributed node
+  --no-halt                   Does not halt the Erlang VM after execution
+  --sname NAME                Makes and assigns a short name to the distributed node
+  --werl                      Uses Erlang's Windows shell GUI (Windows only)
+
+** Options marked with (*) can be given more than once
+** Options given after the .exs file or -- are passed down to the executed code
+** Options can be passed to the Erlang runtime using ELIXIR_ERL_OPTIONS or --erl
+</pre>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2017-02-17</span>
+        <span title="last modification date" class="post-info">2020-04-09</span>
+        <span title="tags" class="post-info"><a href="/tags/elixir/">elixir</a>, <a href="/tags/phoenix/">phoenix</a>, <a href="/tags/tips/">tips</a></span>
+        <span title="author" class="post-info">bigfang</span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          //var disqus_developer = 1;
+          var disqus_identifier = "/blog/2017-02-17/phoenix-daemon.html";
+          var disqus_url = "http://bigfang.net/blog/2017-02-17/phoenix-daemon.html";
+          var disqus_shortname = 'bigfang';
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+       <div id="hashover"></div>
+       <script type="text/javascript" src="/hashover.php"></script>
+       <noscript>You must have JavaScript enabled to use the comments.</noscript>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-37180058-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.x (<a href="http://orgmode.org">Org mode</a> 9.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:bitair &lt;at&gt; gmail &lt;dot&gt; com">bigfang</a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

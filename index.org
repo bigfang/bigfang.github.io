@@ -9,4 +9,6 @@
 #+DESCRIPTION: bigfang的个人首页
 
 
-施工中...
+原文是从 markdown 转成 org-mode 的, 所以格式乱了,啥时候有心思再改吧...
+
+=ls *.md | cut -f 1 -d '.' | xargs -I{} pandoc -f gfm -t org -o {}.org {}.md=

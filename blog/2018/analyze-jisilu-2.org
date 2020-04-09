@@ -1,6 +1,5 @@
 #+TITLE: 透过论坛看股市（2）:用户的地区和行业分布
 #+DATE: 2018-01-30 13:04:04
-#+URI:         /blog/%y-%m-%d/analyze-jisilu-2
 #+KEYWORDS:    pandas, matplotlib, seaborn, python, 可视化, 股市
 #+TAGS:        :pandas:matplotlib:seaborn:python:集思录:
 #+LANGUAGE:    zh

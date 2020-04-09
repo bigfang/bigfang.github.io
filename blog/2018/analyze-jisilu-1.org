@@ -1,6 +1,5 @@
 #+TITLE:       透过论坛看股市（1）:从发帖找热点
 #+DATE:        2018-01-27 12:29:30
-#+URI:         /blog/%y-%m-%d/analyze-jisilu-1
 #+KEYWORDS:    pandas, matplotlib, seaborn, python, 可视化, 股市
 #+TAGS:        :pandas:matplotlib:seaborn:python:集思录:
 #+LANGUAGE:    zh

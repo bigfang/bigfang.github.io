@@ -2,7 +2,6 @@
 #+AUTHOR:      bigfang
 #+EMAIL:       bitair@gmail.com
 #+DATE:        <2019-01-18 Fri 11:23>
-#+URI:         /blog/%y-%m-%d/org-page
 #+KEYWORDS:    org-mode
 #+TAGS:        :Emacs:Org Mode:
 #+LANGUAGE:    zh
@@ -11,3 +10,5 @@
 
 
 换到了[[https://github.com/kelvinh/org-page][org-page]]
+
+=ls *.md | cut -f 1 -d '.' | xargs -I{} pandoc -f gfm -t org -o {}.org {}.md=

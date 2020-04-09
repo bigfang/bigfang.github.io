@@ -1,10 +1,8 @@
 #+TITLE: 使用webpack取代brunch
 #+DATE: 2018-01-13 23:04:30
-#+URI:         /blog/%y-%m-%d/webpack-beat-brunch
 #+KEYWORDS:    webpack, brunch, 前端
 #+TAGS:        :webpack:elixir:phoenix:
 #+LANGUAGE:    zh
-#+OPTIONS:     H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
 #+DESCRIPTION: webpack configure
 
 

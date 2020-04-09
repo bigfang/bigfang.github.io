@@ -2,7 +2,6 @@
 #+AUTHOR:      bigfang
 #+EMAIL:       bitair@gmail.com
 #+DATE:        2018-01-31 20:33:29
-#+URI:         /blog/%y-%m-%d/analyze-jisilu-2.5
 #+KEYWORDS:    pandas, matplotlib, seaborn, python, 可视化, 股市
 #+TAGS:        :pandas:matplotlib:seaborn:python:集思录:
 #+LANGUAGE:    zh
